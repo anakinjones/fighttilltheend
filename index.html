@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  
+  <!-- iOS PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Apex Calisthenics">
+  <title>Apex Calisthenics & Gym</title>
+
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: #151c2c;
+      --card-border: #1e293b;
+      --accent-skyblue: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #22c55e;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      padding: 20px 16px 12px;
+      background: rgba(11, 15, 25, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    header h1 span {
+      color: var(--accent-skyblue);
+    }
+
+    /* Tab Content Navigation */
+    .tab-content {
+      display: none;
+      padding: 16px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-skyblue);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Target Banner */
+    .target-banner {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(15, 23, 42, 0.6));
+      border: 1px solid var(--accent-skyblue);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .target-banner h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-skyblue);
+      margin-bottom: 6px;
+    }
+
+    .target-banner p {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    /* Skill Progression Lists */
+    .skill-group {
+      margin-bottom: 16px;
+    }
+
+    .skill-group-title {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      background: #1e293b;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .step-item.completed {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .step-item.completed .step-name {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--accent-skyblue);
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .step-item.completed .checkbox {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .step-item.completed .checkbox::after {
+      content: '✓';
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .step-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    /* Daily Routine Schedule */
+    .day-badge {
+      background: var(--accent-skyblue);
+      color: #000;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .exercise-list {
+      list-style: none;
+      margin-top: 8px;
+    }
+
+    .exercise-list li {
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .exercise-list li:last-child {
+      border-bottom: none;
+    }
+
+    .exercise-list li span {
+      color: var(--text-muted);
+    }
+
+    /* Tracker Form */
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent-skyblue);
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent-skyblue);
+      color: #0b0f19;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Log History Table */
+    .log-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .log-info div:first-child {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .log-info div:last-child {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .log-stats {
+      font-weight: 700;
+      color: var(--accent-skyblue);
+    }
+
+    /* Bottom Navigation Bar */
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(65px + env(safe-area-inset-bottom));
+      background: rgba(21, 28, 44, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      padding-bottom: env(safe-area-inset-bottom);
+      z-index: 100;
+    }
+
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .nav-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .nav-btn.active {
+      color: var(--accent-skyblue);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>APEX <span>CALISTHENICS</span></h1>
+  </header>
+
+  <!-- TAB 1: SKILLS & PROGRESSION -->
+  <div id="skills" class="tab-content active">
+    <div class="target-banner">
+      <h2>Ultimative Hauptziele</h2>
+      <p>🎯 Full Planche & 🎯 One Arm Handstand (OAH)</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Skill Progressionspfad</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+        Hake absolvierte Stufen ab. Beginnt beim Einsteiger-Niveau bis zu Elite-Skills.
+      </p>
+
+      <div id="progression-container"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: TRAININGSPLAN (7-TAGE) -->
+  <div id="plan" class="tab-content">
+    <div class="card">
+      <div class="card-title">7-Tage Hybrid Plan</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+        Fokus: Calisthenics, Maschinen, Gewichte & Lauf-Ausdauer.
+      </p>
+    </div>
+
+    <div id="workout-plan-container"></div>
+  </div>
+
+  <!-- TAB 3: TRACKER & LOGS -->
+  <div id="tracker" class="tab-content">
+    <div class="card">
+      <div class="card-title">Fortschritt Eintragen</div>
+      <form id="tracker-form">
+        <div class="form-group">
+          <label for="exercise">Übung</label>
+          <input type="text" id="exercise" placeholder="z. B. Weighted Dips, Bench Press" required>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <div class="form-group" style="flex: 1;">
+            <label for="weight">Gewicht (kg)</label>
+            <input type="number" id="weight" step="0.5" placeholder="0" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label for="sets">Sets</label>
+            <input type="number" id="sets" placeholder="3" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label for="reps">Reps</label>
+            <input type="number" id="reps" placeholder="8" required>
+          </div>
+        </div>
+        <button type="submit" class="btn">Eintrag Speichern</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Verlauf & PRs</div>
+      <div id="log-history">
+        <!-- Log-Einträge erscheinen hier -->
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav>
+    <button class="nav-btn active" onclick="switchTab('skills', this)">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Skills
+    </button>
+    <button class="nav-btn" onclick="switchTab('plan', this)">
+      <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+      Plan
+    </button>
+    <button class="nav-btn" onclick="switchTab('tracker', this)">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      Tracker
+    </button>
+  </nav>
+
+  <script>
+    // --- SKILL PROGRESSION DATA ---
+    const progressions = [
+      {
+        category: "1. Handstand & One Arm Handstand (OAH)",
+        steps: [
+          "Wall Handstand Hold (60s)",
+          "Freestanding Handstand (30s)",
+          "Handstand Push-ups (Chest-to-Wall)",
+          "Freestanding HS Push-ups",
+          "Handstand Weight Shifts",
+          "One Arm Handstand Wall Lean",
+          "One Arm Handstand (OAH Hold)"
+        ]
+      },
+      {
+        category: "2. Planche Progression (Ziel: Full Planche)",
+        steps: [
+          "Planche Lean (20s Hold)",
+          "Tuck Planche Hold",
+          "Advanced Tuck Planche",
+          "Straddle Planche Hold",
+          "Full Planche Hold"
+        ]
+      },
+      {
+        category: "3. Pull Skills (Front Lever & Muscle-Up)",
+        steps: [
+          "Scapular Pull-ups & Core Basics",
+          "High Pull-ups (Chest to Bar)",
+          "Strict Bar Muscle-Up",
+          "Tuck Front Lever",
+          "Advanced Tuck / Straddle Front Lever",
+          "Full Front Lever Hold",
+          "Front Lever Touch"
+        ]
+      },
+      {
+        category: "4. Push Skills (Human Flag)",
+        steps: [
+          "Support Hold & Core Compression",
+          "Vertical Human Flag Leaning",
+          "Tuck Human Flag",
+          "Straddle Human Flag",
+          "Full Human Flag"
+        ]
+      },
+      {
+        category: "5. Ausdauer (Running Target)",
+        steps: [
+          "5k Run unter 25 Min",
+          "10k Run unter 45 Min",
+          "10k Run Sub-30 Min Target"
+        ]
+      }
+    ];
+
+    // --- WORKOUT PLAN DATA (7 DAYS) ---
+    const weeklyPlan = [
+      { day: "Tag 1", title: "Push: Calisthenics & Gym Hybrid", exercises: ["Planche Lean / Tuck Hold: 4 Sets", "Weighted Dips: 4 Sets x 6-8 Reps", "Incline Dumbbell Press: 3 Sets x 10 Reps", "Pike Push-ups / Handstand Push-ups: 4 Sets", "Lateral Raises (Kabelzug/Kurzhantel): 3 Sets x 12 Reps"] },
+      { day: "Tag 2", title: "Running: Intervall / Endurance", exercises: ["10k Tempo-Lauf oder Intervalltraining (Ziel: Sub-30 10k Build)", "Mobility & Beinstreckung: 20 Min"] },
+      { day: "Tag 3", title: "Pull: Calisthenics & Machine Heavy", exercises: ["Front Lever Progression Holds: 4 Sets", "Weighted Pull-ups: 4 Sets x 5 Reps", "Latziehen / Kabelrudern: 3 Sets x 10 Reps", "Face Pulls: 3 Sets x 15 Reps", "Core Compression & Dragon Flags: 4 Sets"] },
+      { day: "Tag 4", title: "Legs & Core Strength", exercises: ["Squats (Barbell) / Leg Press: 4 Sets x 8 Reps", "Romanian Deadlifts (RDL): 3 Sets x 10 Reps", "Beinstrecker & Beinbeuger Maschine: 3 Sets", "Calf Raises: 4 Sets x 15 Reps", "Ab-Wheel Rollouts: 4 Sets"] },
+      { day: "Tag 5", title: "Pure Skill Day (Focus & Technique)", exercises: ["Handstand & Balance Drills (OAH Practice): 30 Min", "Planche Lean & Tuck Transitions: 20 Min", "Human Flag Isometrics: 4 Sets", "Muscle-Up Technique Drills: 4 Sets"] },
+      { day: "Tag 6", title: "Running: Long Zone 2 Run", exercises: ["Long Distance Base Run (8-12 km im leichten Tempo)", "Stretching & Foam Rolling"] },
+      { day: "Tag 7", title: "Full Body Hybrid & Dynamic Strength", exercises: ["Muscle-Ups: 4 Sets", "Bench Press / Chest Press Maschine: 4 Sets x 8 Reps", "Seilrudern / T-Bar Row: 3 Sets x 10 Reps", "Overhead Press / HSPU: 3 Sets x 8 Reps", "Human Flag & Core Finisher: 3 Sets"] }
+    ];
+
+    // --- APP INITIALIZATION ---
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProgressions();
+      renderWorkoutPlan();
+      loadLogs();
+    });
+
+    // Navigation Switch
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // Render Skill Progressions
+    function renderProgressions() {
+      const container = document.getElementById('progression-container');
+      const savedState = JSON.parse(localStorage.getItem('calisthenics_skills') || '{}');
+
+      container.innerHTML = progressions.map((group, groupIdx) => `
+        <div class="skill-group">
+          <div class="skill-group-title">${group.category}</div>
+          ${group.steps.map((step, stepIdx) => {
+            const id = `skill-${groupIdx}-${stepIdx}`;
+            const isChecked = savedState[id] ? 'completed' : '';
+            return `
+              <div class="step-item ${isChecked}" onclick="toggleSkill('${id}')">
+                <div class="checkbox"></div>
+                <div class="step-name">${step}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `).join('');
+    }
+
+    function toggleSkill(id) {
+      const savedState = JSON.parse(localStorage.getItem('calisthenics_skills') || '{}');
+      savedState[id] = !savedState[id];
+      localStorage.setItem('calisthenics_skills', JSON.stringify(savedState));
+      renderProgressions();
+    }
+
+    // Render Workout Plan
+    function renderWorkoutPlan() {
+      const container = document.getElementById('workout-plan-container');
+      container.innerHTML = weeklyPlan.map(w => `
+        <div class="card">
+          <div class="card-title">
+            <span>${w.title}</span>
+            <span class="day-badge">${w.day}</span>
+          </div>
+          <ul class="exercise-list">
+            ${w.exercises.map(ex => `<li>${ex}</li>`).join('')}
+          </ul>
+        </div>
+      `).join('');
+    }
+
+    // Tracker Form Submission & LocalStorage
+    document.getElementById('tracker-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const exercise = document.getElementById('exercise').value;
+      const weight = document.getElementById('weight').value;
+      const sets = document.getElementById('sets').value;
+      const reps = document.getElementById('reps').value;
+
+      const newLog = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }),
+        exercise,
+        weight,
+        sets,
+        reps
+      };
+
+      const logs = JSON.parse(localStorage.getItem('calisthenics_logs') || '[]');
+      logs.unshift(newLog);
+      localStorage.setItem('calisthenics_logs', JSON.stringify(logs));
+
+      document.getElementById('tracker-form').reset();
+      loadLogs();
+    });
+
+    function loadLogs() {
+      const historyContainer = document.getElementById('log-history');
+      const logs = JSON.parse(localStorage.getItem('calisthenics_logs') || '[]');
+
+      if (logs.length === 0) {
+        historyContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Noch keine Einträge vorhanden.</p>';
+        return;
+      }
+
+      historyContainer.innerHTML = logs.map(log => `
+        <div class="log-item">
+          <div class="log-info">
+            <div>${log.exercise}</div>
+            <div>${log.date}</div>
+          </div>
+          <div class="log-stats">
+            ${log.weight} kg × ${log.sets}S / ${log.reps}R
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
