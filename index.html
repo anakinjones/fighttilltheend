@@ -201,14 +201,6 @@
       border-bottom: none;
     }
 
-    .exercise-tag {
-      font-size: 0.75rem;
-      color: var(--accent-skyblue);
-      background: rgba(56, 189, 248, 0.1);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-
     .form-group {
       margin-bottom: 12px;
     }
@@ -411,7 +403,6 @@
   </nav>
 
   <script>
-    // --- SKILL PROGRESSION DATA (ANFÄNGER BIS ELITE) ---
     const progressions = [
       {
         id: "hs",
@@ -422,7 +413,7 @@
           { name: "Freestanding Handstand (10-20s)", level: 3 },
           { name: "Handstand Push-ups (an der Wand)", level: 4 },
           { name: "Freestanding HS Push-ups", level: 5 },
-          { name: "Handstand Weight Shifts (Einarm-Vorbereitung)", level: 6 },
+          { name: "Handstand Weight Shifts", level: 6 },
           { name: "One Arm Handstand Wall Lean", level: 7 },
           { name: "One Arm Handstand (OAH Hold)", level: 8 }
         ]
@@ -431,7 +422,7 @@
         id: "planche",
         category: "2. Planche Progression (Ziel: Full Planche)",
         steps: [
-          "Liegestütze saubere Form (20 Reps)", level: 1,
+          { name: "Liegestütze saubere Form (20 Reps)", level: 1 },
           { name: "Planche Lean am Boden (15s)", level: 2 },
           { name: "Tuck Planche Hold (10s)", level: 3 },
           { name: "Advanced Tuck Planche Hold", level: 4 },
@@ -443,7 +434,7 @@
         id: "pull",
         category: "3. Pull Skills (Front Lever & Muscle-Up)",
         steps: [
-          { name: "Australische Klimmzüge / Inverted Rows (12 Reps)", level: 1 },
+          { name: "Australische Klimmzüge (12 Reps)", level: 1 },
           { name: "Saubere Klimmzüge / Pull-ups (10 Reps)", level: 2 },
           { name: "High Pull-ups (Brust zu Stange)", level: 3 },
           { name: "Strict Bar Muscle-Up", level: 4 },
@@ -458,7 +449,7 @@
         category: "4. Core & Human Flag",
         steps: [
           { name: "Plank Hold (60s)", level: 1 },
-          { name: "Hanging Leg Raises (Zehen zur Stange)", level: 2 },
+          { name: "Hanging Leg Raises", level: 2 },
           { name: "Vertical Human Flag Leaning", level: 3 },
           { name: "Tuck Human Flag", level: 4 },
           { name: "Straddle Human Flag", level: 5 },
@@ -498,13 +489,12 @@
         <div class="skill-group">
           <div class="skill-group-title">${group.category}</div>
           ${group.steps.map((step, stepIdx) => {
-            const stepName = typeof step === 'string' ? step : step.name;
             const id = `skill-${groupIdx}-${stepIdx}`;
             const isChecked = savedState[id] ? 'completed' : '';
             return `
               <div class="step-item ${isChecked}" onclick="toggleSkill('${id}')">
                 <div class="checkbox"></div>
-                <div class="step-name">${stepName}</div>
+                <div class="step-name">${step.name}</div>
               </div>
             `;
           }).join('')}
@@ -519,18 +509,15 @@
       renderProgressions();
     }
 
-    // --- DYNAMISCHER PLAN GENERATOR ---
     function generateDynamicPlan() {
       const savedSkills = JSON.parse(localStorage.getItem('calisthenics_skills') || '{}');
       const logs = JSON.parse(localStorage.getItem('calisthenics_logs') || '[]');
 
-      // Höchste abgehakte Levels ermitteln
       let hsLevel = getHighestLevel(0, savedSkills);
       let plancheLevel = getHighestLevel(1, savedSkills);
       let pullLevel = getHighestLevel(2, savedSkills);
       let flagLevel = getHighestLevel(3, savedSkills);
 
-      // Höchstes getracktes Gewicht für Dips & Bench als Zusatz-Reiz
       let maxWeight = 0;
       logs.forEach(l => {
         const w = parseFloat(l.weight);
