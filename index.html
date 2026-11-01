@@ -1,274 +1,789 @@
 <!DOCTYPE html>
-<html lang="de" class="dark h-full">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Fitness & Getränkelager Tracker</title>
   
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              bg: '#09090b',
-              sky: '#00bfff',
-              skyHover: '#0099cc',
-              amber: '#f59e0b',
-              emerald: '#10b981',
-              rose: '#f43f5e'
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Apex Calisthenics">
+  <title>Apex Calisthenics & Gym</title>
+
   <style>
-    body {
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
-      padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: #151c2c;
+      --card-border: #1e293b;
+      --accent-skyblue: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #22c55e;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
       user-select: none;
-      -webkit-user-select: none;
     }
-    input, button, select {
-      touch-action: manipulation;
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+      min-height: 100vh;
     }
-    .glass-card {
-      background: rgba(24, 24, 27, 0.55);
+
+    header {
+      padding: 20px 16px 12px;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    header h1 span {
+      color: var(--accent-skyblue);
+    }
+
+    .tab-content {
+      display: none;
+      padding: 16px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-skyblue);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .target-banner {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(15, 23, 42, 0.6));
+      border: 1px solid var(--accent-skyblue);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .target-banner h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-skyblue);
+      margin-bottom: 6px;
+    }
+
+    .target-banner p {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .skill-group {
+      margin-bottom: 18px;
+    }
+
+    .skill-group-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      background: #1e293b;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .step-item.completed {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .step-item.completed .step-name {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--accent-skyblue);
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-item.completed .checkbox {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .step-item.completed .checkbox::after {
+      content: '✓';
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .step-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .day-badge {
+      background: var(--accent-skyblue);
+      color: #000;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .exercise-list {
+      list-style: none;
+      margin-top: 8px;
+    }
+
+    .exercise-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .exercise-list li:last-child {
+      border-bottom: none;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent-skyblue);
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent-skyblue);
+      color: #0b0f19;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--accent-glow);
+      transition: transform 0.1s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-update {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
+    .log-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .log-info div:first-child {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .log-info div:last-child {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .log-stats {
+      font-weight: 700;
+      color: var(--accent-skyblue);
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(65px + env(safe-area-inset-bottom));
+      background: rgba(21, 28, 44, 0.95);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      padding-bottom: env(safe-area-inset-bottom);
+      z-index: 100;
     }
-    .glass-input {
-      background: rgba(9, 9, 11, 0.6);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .nav-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .nav-btn.active {
+      color: var(--accent-skyblue);
     }
   </style>
 </head>
-<body class="bg-brand-bg text-zinc-100 min-h-full font-sans antialiased flex flex-col justify-between relative overflow-x-hidden">
+<body>
 
-  <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 transform -translate-y-4 pointer-events-none w-[90%] max-w-xs">
-    <div class="glass-card px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-brand-sky/30">
-      <div id="toast-icon" class="w-8 h-8 rounded-xl bg-brand-emerald/20 text-brand-emerald flex items-center justify-center font-bold text-sm">
-        <i class="fa-solid fa-check"></i>
-      </div>
-      <div>
-        <p id="toast-title" class="text-xs font-bold text-white">Erfolgreich</p>
-        <p id="toast-msg" class="text-[11px] text-zinc-300">Eintrag gespeichert</p>
-      </div>
+  <header>
+    <h1>APEX <span>CALISTHENICS</span></h1>
+  </header>
+
+  <!-- TAB 1: SKILLS & PROGRESSION -->
+  <div id="skills" class="tab-content active">
+    <div class="target-banner">
+      <h2>Ultimative Hauptziele</h2>
+      <p>🎯 Full Planche & 🎯 One Arm Handstand (OAH)</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Skill-Progressionspfad</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+        Vom Anfänger bis zum Pro. Hake deine Meilensteine ab, um deinen Trainingsplan anzupassen.
+      </p>
+
+      <div id="progression-container"></div>
     </div>
   </div>
 
-  <!-- CONTAINER -->
-  <div class="flex-1 max-w-sm mx-auto w-full p-4 flex flex-col pb-20 relative z-10">
-    
-    <!-- HEADER -->
-    <header class="flex items-center justify-between py-3 mb-4 border-b border-white/10">
-      <div class="flex items-center gap-2">
-        <i class="fa-solid fa-dumbbell text-brand-sky text-xl"></i>
-        <h1 class="text-xl font-bold tracking-wide text-white">Workout & Lager</h1>
-      </div>
-    </header>
+  <!-- TAB 2: TRAININGSPLAN (7-TAGE) -->
+  <div id="plan" class="tab-content">
+    <button class="btn btn-update" onclick="generateDynamicPlan()">🔄 Plan basierend auf Skills & PRs aktualisieren</button>
 
-    <!-- TABS -->
-    <div class="grid grid-cols-2 glass-card p-1 rounded-2xl border border-white/10 mb-4">
-      <button id="tab-workout-btn" onclick="switchTab('workout')" class="py-2 text-sm font-medium rounded-xl transition-all bg-brand-sky text-zinc-950 font-bold shadow-sm">
-        <i class="fa-solid fa-person-running mr-1.5"></i> Training
-      </button>
-      <button id="tab-lager-btn" onclick="switchTab('lager')" class="py-2 text-sm font-medium rounded-xl transition-all text-zinc-400 hover:text-white">
-        <i class="fa-solid fa-boxes-stacked mr-1.5"></i> Lager
-      </button>
+    <div class="card">
+      <div class="card-title">Dein Personalisierter 7-Tage Plan</div>
+      <p id="plan-status" style="font-size: 0.85rem; color: var(--text-muted);">
+        Der Plan passt sich automatisch an deine abgehakten Skills und getrackten PRs an.
+      </p>
     </div>
 
-    <!-- TAB 1: TRAINING / ÜBUNGEN REFERENZ -->
-    <div id="tab-workout" class="space-y-4 flex-1">
-      <div class="glass-card p-4 rounded-2xl space-y-4">
-        <h3 class="text-sm font-semibold text-white flex items-center gap-2 border-b border-white/10 pb-2">
-          <i class="fa-solid fa-list-check text-brand-sky"></i> Training erfassen
-        </h3>
+    <div id="workout-plan-container"></div>
+  </div>
 
-        <!-- Übungs-Referenz Auswahl -->
-        <div>
-          <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Übung auswählen</label>
-          <select id="exercise-select" onchange="onExerciseChange()" class="w-full glass-input rounded-2xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand-sky transition-colors">
-            <option value="" disabled selected>Bitte Übung wählen...</option>
+  <!-- TAB 3: TRACKER & LOGS -->
+  <div id="tracker" class="tab-content">
+    <div class="card">
+      <div class="card-title">Fortschritt / PR Eintragen</div>
+      <form id="tracker-form">
+        <div class="form-group">
+          <label for="exercise-select">Übung auswählen</label>
+          <select id="exercise-select" onchange="handleExerciseChange()" required>
+            <option value="" disabled selected>-- Bitte Übung wählen --</option>
+            
+            <optgroup label="Lauf-Einheiten (Ausdauer)">
+              <option value="5k Run">5k Run</option>
+              <option value="10k Run">10k Run (Sub-30 Target)</option>
+              <option value="Intervall Run">Intervall Run / Tempo</option>
+              <option value="Long Zone 2 Run">Long Zone 2 Run</option>
+            </optgroup>
+
+            <optgroup label="Handstand & OAH Skills">
+              <option value="Pike Hold / Wall HS">Pike Hold / Wall HS</option>
+              <option value="Freestanding Handstand">Freestanding Handstand</option>
+              <option value="Handstand Push-ups">Handstand Push-ups</option>
+              <option value="One Arm Handstand (OAH)">One Arm Handstand (OAH)</option>
+            </optgroup>
+
+            <optgroup label="Planche & Push Skills">
+              <option value="Liegestütze / Planche Lean">Liegestütze / Planche Lean</option>
+              <option value="Tuck Planche Hold">Tuck Planche Hold</option>
+              <option value="Adv. Tuck / Straddle Planche">Adv. Tuck / Straddle Planche</option>
+              <option value="Full Planche Hold">Full Planche Hold</option>
+            </optgroup>
+
+            <optgroup label="Pull Skills (Front Lever & Muscle-Up)">
+              <option value="Klimmzüge / Inverted Rows">Klimmzüge / Inverted Rows</option>
+              <option value="Bar Muscle-Up">Bar Muscle-Up</option>
+              <option value="Tuck Front Lever">Tuck Front Lever</option>
+              <option value="Full Front Lever / Touch">Full Front Lever / Touch</option>
+            </optgroup>
+
+            <optgroup label="Core & Human Flag">
+              <option value="Hanging Leg Raises / Plank">Hanging Leg Raises / Plank</option>
+              <option value="Human Flag Progression">Human Flag Progression</option>
+            </optgroup>
+
+            <optgroup label="Gym & Compound (Gewichte)">
+              <option value="Weighted Dips">Weighted Dips</option>
+              <option value="Bench Press (Brustpresse)">Bench Press (Brustpresse)</option>
+              <option value="Barbell Squats / Leg Press">Barbell Squats / Leg Press</option>
+              <option value="Romanian Deadlifts (RDL)">Romanian Deadlifts (RDL)</option>
+              <option value="Weighted Pull-ups">Weighted Pull-ups</option>
+              <option value="Latzug / Kabelrudern">Latzug / Kabelrudern</option>
+              <option value="Overhead Press / Shoulder Press">Overhead Press / Shoulder Press</option>
+            </optgroup>
           </select>
         </div>
 
-        <!-- Dynamische Felder für Krafttraining (Gewicht, Sets, Reps) -->
-        <div id="fields-strength" class="space-y-3 hidden">
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs text-zinc-400 mb-1">Gewicht (kg)</label>
-              <input type="number" step="0.5" id="ex-weight" placeholder="0" class="w-full glass-input rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-sky">
-            </div>
-            <div>
-              <label class="block text-xs text-zinc-400 mb-1">Wiederholungen (Reps)</label>
-              <input type="number" id="ex-reps" placeholder="10" class="w-full glass-input rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-sky">
-            </div>
+        <div style="display: flex; gap: 10px;">
+          <div class="form-group" style="flex: 1;" id="primary-input-group">
+            <label id="primary-label" for="primary-value">Gewicht (kg)</label>
+            <input type="number" id="primary-value" step="0.1" placeholder="0" required>
           </div>
-          <div>
-            <label class="block text-xs text-zinc-400 mb-1">Sätze (Sets)</label>
-            <input type="number" id="ex-sets" placeholder="3" class="w-full glass-input rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-sky">
+          <div class="form-group" style="flex: 1;" id="sets-group">
+            <label for="sets">Sets</label>
+            <input type="number" id="sets" placeholder="3" required>
+          </div>
+          <div class="form-group" style="flex: 1;" id="reps-group">
+            <label for="reps">Reps / Dauer</label>
+            <input type="number" id="reps" placeholder="8" required>
           </div>
         </div>
-
-        <!-- Dynamische Felder für Cardio (Lauf min / Pace) -->
-        <div id="fields-cardio" class="space-y-3 hidden">
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs text-zinc-400 mb-1">Dauer (Minuten)</label>
-              <input type="number" id="ex-duration" placeholder="30" class="w-full glass-input rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-sky">
-            </div>
-            <div>
-              <label class="block text-xs text-zinc-400 mb-1">Pace (min/km)</label>
-              <input type="text" id="ex-pace" placeholder="5:30" class="w-full glass-input rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-sky">
-            </div>
-          </div>
-        </div>
-
-        <button onclick="saveWorkout()" class="w-full py-3 bg-brand-sky text-zinc-950 font-bold rounded-2xl active:bg-brand-skyHover transition-all shadow-lg shadow-sky-950/40 mt-2">
-          Eintrag speichern
-        </button>
-      </div>
-
-      <!-- Letzte Einträge / Log -->
-      <div class="glass-card p-4 rounded-2xl space-y-2">
-        <h4 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Letzte Aktivitäten</h4>
-        <div id="workout-log" class="space-y-2 text-xs text-zinc-300">
-          <p class="text-zinc-500 italic">Noch keine Einträge heute.</p>
-        </div>
-      </div>
+        <button type="submit" class="btn">Eintrag Speichern</button>
+      </form>
     </div>
 
-    <!-- TAB 2: LAGER (Dein bestehendes System) -->
-    <div id="tab-lager" class="hidden space-y-4 flex-1">
-      <div class="glass-card p-4 rounded-2xl text-center text-zinc-400">
-        <p>Getränkelager-Ansicht (wie zuvor besprochen integriert).</p>
-      </div>
+    <div class="card">
+      <div class="card-title">Verlauf & PRs</div>
+      <div id="log-history"></div>
     </div>
-
   </div>
 
+  <!-- BOTTOM NAVIGATION -->
+  <nav>
+    <button class="nav-btn active" onclick="switchTab('skills', this)">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Skills
+    </button>
+    <button class="nav-btn" onclick="switchTab('plan', this)">
+      <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+      Plan
+    </button>
+    <button class="nav-btn" onclick="switchTab('tracker', this)">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      Tracker
+    </button>
+  </nav>
+
   <script>
-    // Master-Referenz aller Übungen mit automatischem Typ (strength / cardio)
-    const masterExercises = [
-      { id: 'bench', name: 'Bankdrücken (Chest)', type: 'strength' },
-      { id: 'squat', name: 'Kniebeugen (Legs)', type: 'strength' },
-      { id: 'deadlift', name: 'Kreuzheben (Back)', type: 'strength' },
-      { id: 'ohp', name: 'Schulterdrücken', type: 'strength' },
-      { id: 'pullup', name: 'Klimmzüge', type: 'strength' },
-      { id: 'running', name: 'Laufen / Joggen (Cardio)', type: 'cardio' },
-      { id: 'cycling', name: 'Radfahren (Cardio)', type: 'cardio' },
-      { id: 'rowing', name: 'Rudern (Ergometer)', type: 'cardio' }
+    const progressions = [
+      {
+        id: "hs",
+        category: "1. Handstand & One Arm Handstand (OAH)",
+        steps: [
+          { name: "Pike Hold am Boden (Grundlage)", level: 1 },
+          { name: "Wall Handstand Hold (30-60s)", level: 2 },
+          { name: "Freestanding Handstand (10-20s)", level: 3 },
+          { name: "Handstand Push-ups (an der Wand)", level: 4 },
+          { name: "Freestanding HS Push-ups", level: 5 },
+          { name: "Handstand Weight Shifts", level: 6 },
+          { name: "One Arm Handstand Wall Lean", level: 7 },
+          { name: "One Arm Handstand (OAH Hold)", level: 8 }
+        ]
+      },
+      {
+        id: "planche",
+        category: "2. Planche Progression (Ziel: Full Planche)",
+        steps: [
+          { name: "Liegestütze saubere Form (20 Reps)", level: 1 },
+          { name: "Planche Lean am Boden (15s)", level: 2 },
+          { name: "Tuck Planche Hold (10s)", level: 3 },
+          { name: "Advanced Tuck Planche Hold", level: 4 },
+          { name: "Straddle Planche Hold", level: 5 },
+          { name: "Full Planche Hold", level: 6 }
+        ]
+      },
+      {
+        id: "pull",
+        category: "3. Pull Skills (Front Lever & Muscle-Up)",
+        steps: [
+          { name: "Australische Klimmzüge (12 Reps)", level: 1 },
+          { name: "Saubere Klimmzüge / Pull-ups (10 Reps)", level: 2 },
+          { name: "High Pull-ups (Brust zu Stange)", level: 3 },
+          { name: "Strict Bar Muscle-Up", level: 4 },
+          { name: "Tuck Front Lever Hold", level: 5 },
+          { name: "Advanced Tuck / Straddle Front Lever", level: 6 },
+          { name: "Full Front Lever Hold", level: 7 },
+          { name: "Front Lever Touch", level: 8 }
+        ]
+      },
+      {
+        id: "flag",
+        category: "4. Core & Human Flag",
+        steps: [
+          { name: "Plank Hold (60s)", level: 1 },
+          { name: "Hanging Leg Raises", level: 2 },
+          { name: "Vertical Human Flag Leaning", level: 3 },
+          { name: "Tuck Human Flag", level: 4 },
+          { name: "Straddle Human Flag", level: 5 },
+          { name: "Full Human Flag", level: 6 }
+        ]
+      },
+      {
+        id: "run",
+        category: "5. Ausdauer (Running Target)",
+        steps: [
+          { name: "5k Run unter 30 Min", level: 1 },
+          { name: "5k Run unter 22 Min", level: 2 },
+          { name: "10k Run unter 45 Min", level: 3 },
+          { name: "10k Run Sub-30 Min Target", level: 4 }
+        ]
+      }
     ];
 
-    function initExercises() {
-      const select = document.getElementById('exercise-select');
-      masterExercises.forEach(ex => {
-        const opt = document.createElement('option');
-        opt.value = ex.id;
-        opt.textContent = ex.name;
-        select.appendChild(opt);
-      });
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProgressions();
+      generateDynamicPlan();
+      loadLogs();
+    });
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
     }
 
-    // Erkennt den Typ anhand der Referenz und schaltet die Felder um
-    function onExerciseChange() {
-      const selectedId = document.getElementById('exercise-select').value;
-      const exercise = masterExercises.find(ex => ex.id === selectedId);
-      
-      const strengthFields = document.getElementById('fields-strength');
-      const cardioFields = document.getElementById('fields-cardio');
+    function renderProgressions() {
+      const container = document.getElementById('progression-container');
+      const savedState = JSON.parse(localStorage.getItem('calisthenics_skills') || '{}');
 
-      if (!exercise) return;
+      container.innerHTML = progressions.map((group, groupIdx) => `
+        <div class="skill-group">
+          <div class="skill-group-title">${group.category}</div>
+          ${group.steps.map((step, stepIdx) => {
+            const id = `skill-${groupIdx}-${stepIdx}`;
+            const isChecked = savedState[id] ? 'completed' : '';
+            return `
+              <div class="step-item ${isChecked}" onclick="toggleSkill('${id}')">
+                <div class="checkbox"></div>
+                <div class="step-name">${step.name}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `).join('');
+    }
 
-      if (exercise.type === 'strength') {
-        strengthFields.classList.remove('hidden');
-        cardioFields.classList.add('hidden');
-      } else if (exercise.type === 'cardio') {
-        strengthFields.classList.add('hidden');
-        cardioFields.classList.remove('hidden');
+    function toggleSkill(id) {
+      const savedState = JSON.parse(localStorage.getItem('calisthenics_skills') || '{}');
+      savedState[id] = !savedState[id];
+      localStorage.setItem('calisthenics_skills', JSON.stringify(savedState));
+      renderProgressions();
+    }
+
+    // Dynamischer Wechsel zwischen Lauf-Einheiten (Minuten/Pace) und Kraft-Einheiten (Gewicht)
+    function handleExerciseChange() {
+      const selectedEx = document.getElementById('exercise-select').value;
+      const primaryLabel = document.getElementById('primary-label');
+      const primaryInput = document.getElementById('primary-value');
+      const setsGroup = document.getElementById('sets-group');
+      const repsGroup = document.getElementById('reps-group');
+
+      if (selectedEx.includes('Run')) {
+        primaryLabel.innerText = "Gesamtzeit (Min)";
+        primaryInput.placeholder = "z. B. 38.5";
+        setsGroup.style.display = "none";
+        repsGroup.style.display = "none";
+      } else {
+        primaryLabel.innerText = "Gewicht (kg)";
+        primaryInput.placeholder = "0";
+        setsGroup.style.display = "block";
+        repsGroup.style.display = "block";
       }
     }
 
-    function showToast(title, msg) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toast-title').innerText = title;
-      document.getElementById('toast-msg').innerText = msg;
+    function generateDynamicPlan() {
+      const savedSkills = JSON.parse(localStorage.getItem('calisthenics_skills') || '{}');
+      const logs = JSON.parse(localStorage.getItem('calisthenics_logs') || '[]');
 
-      toast.classList.remove('opacity-0', '-translate-y-4', 'pointer-events-none');
-      toast.classList.add('opacity-100', 'translate-y-0');
+      let hsLevel = getHighestLevel(0, savedSkills);
+      let plancheLevel = getHighestLevel(1, savedSkills);
+      let pullLevel = getHighestLevel(2, savedSkills);
+      let flagLevel = getHighestLevel(3, savedSkills);
 
-      setTimeout(() => {
-        toast.classList.remove('opacity-100', 'translate-y-0');
-        toast.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');
-      }, 3000);
+      let maxWeight = 0;
+      let best10k = 999;
+
+      logs.forEach(l => {
+        if (l.exercise.includes('Run')) {
+          const time = parseFloat(l.primaryVal);
+          if (time < best10k) best10k = time;
+        } else {
+          const w = parseFloat(l.primaryVal);
+          if (w > maxWeight) maxWeight = w;
+        }
+      });
+
+      const plan = [
+        {
+          day: "Tag 1",
+          title: "Push: Calisthenics & Gym Hybrid",
+          exercises: [
+            getPushSkillExercise(plancheLevel),
+            getHandstandExercise(hsLevel),
+            maxWeight > 0 ? `Weighted Dips / Bench Press: 4 Sets (PR Ref: ${maxWeight}kg)` : "Dips / Liegestütze Variation: 4 Sets x 10 Reps",
+            "Incline Dumbbell / Machine Press: 3 Sets x 10 Reps",
+            "Seitheben (Kabelzug/Hantel): 3 Sets x 12 Reps"
+          ]
+        },
+        {
+          day: "Tag 2",
+          title: "Running: Intervall & Endurance",
+          exercises: [
+            best10k <= 30 ? "🚀 Sub-30 10k Maintenance Pace Intervals" : (best10k < 999 ? `10k Run (Aktueller PR: ${best10k} Min - Ziel Sub-30)` : "10k Tempo-Lauf oder Intervalltraining (Ziel: Sub-30 Build)"),
+            "Fokus: Kadenz & Atemtechnik",
+            "Mobility & Beinstreckung: 20 Min"
+          ]
+        },
+        {
+          day: "Tag 3",
+          title: "Pull: Calisthenics & Machine Heavy",
+          exercises: [
+            getPullSkillExercise(pullLevel),
+            pullLevel >= 3 ? "Strict Bar Muscle-Up Practice: 4 Sets" : "High Pull-ups / Brust zur Stange: 4 Sets",
+            "Latzug / Kabelrudern (Maschine): 3 Sets x 10 Reps",
+            "Face Pulls: 3 Sets x 15 Reps",
+            getCoreExercise(flagLevel)
+          ]
+        },
+        {
+          day: "Tag 4",
+          title: "Legs & Core Heavy",
+          exercises: [
+            "Barbell Squats / Leg Press: 4 Sets x 8 Reps",
+            "Romanian Deadlifts (RDL): 3 Sets x 10 Reps",
+            "Beinstrecker & Beinbeuger Maschine: 3 Sets",
+            "Calf Raises: 4 Sets x 15 Reps",
+            "Ab-Wheel Rollouts: 4 Sets"
+          ]
+        },
+        {
+          day: "Tag 5",
+          title: "Pure Skill Day (Fokus Technique)",
+          exercises: [
+            `Handstand Drills: ${getHandstandExercise(hsLevel)}`,
+            `Planche Progression: ${getPushSkillExercise(plancheLevel)}`,
+            `Flag Practice: ${getCoreExercise(flagLevel)}`,
+            "Mobility & Schulter-Gesundheit: 20 Min"
+          ]
+        },
+        {
+          day: "Tag 6",
+          title: "Running: Long Zone 2 Run",
+          exercises: [
+            "Long Distance Base Run (8-12 km im entspannten Tempo)",
+            "Stretching & Foam Rolling"
+          ]
+        },
+        {
+          day: "Tag 7",
+          title: "Full Body Hybrid & Dynamic Strength",
+          exercises: [
+            getPullSkillExercise(pullLevel),
+            "Bench Press / Brustpresse: 4 Sets x 8 Reps",
+            "Seilrudern / T-Bar Row: 3 Sets x 10 Reps",
+            "Overhead Press / Pike Push-ups: 3 Sets x 8 Reps",
+            "Core Finisher"
+          ]
+        }
+      ];
+
+      renderPlan(plan);
     }
 
-    function saveWorkout() {
-      const selectedId = document.getElementById('exercise-select').value;
-      const exercise = masterExercises.find(ex => ex.id === selectedId);
+    function getHighestLevel(groupIdx, savedSkills) {
+      const group = progressions[groupIdx];
+      let max = 0;
+      group.steps.forEach((s, idx) => {
+        if (savedSkills[`skill-${groupIdx}-${idx}`]) {
+          max = idx + 1;
+        }
+      });
+      return max;
+    }
 
-      if (!exercise) {
-        alert("Bitte wähle eine Übung aus!");
+    function getHandstandExercise(lvl) {
+      if (lvl === 0) return "Pike Hold am Boden: 4 Sets x 30s";
+      if (lvl === 1) return "Wall Handstand Hold: 4 Sets x 45s";
+      if (lvl === 2) return "Freestanding Handstand Drills: 4 Sets";
+      if (lvl === 3) return "Handstand Push-ups an der Wand: 4 Sets";
+      if (lvl === 4) return "Freestanding HS Push-ups: 4 Sets";
+      if (lvl === 5) return "Handstand Weight Shifts: 4 Sets";
+      return "One Arm Handstand (OAH) Holds & Wall Leans";
+    }
+
+    function getPushSkillExercise(lvl) {
+      if (lvl === 0) return "Liegestütze saubere Form: 4 Sets x 15 Reps";
+      if (lvl === 1) return "Planche Lean am Boden: 4 Sets x 20s";
+      if (lvl === 2) return "Tuck Planche Holds: 4 Sets x 10s";
+      if (lvl === 3) return "Adv. Tuck Planche Holds: 4 Sets";
+      if (lvl === 4) return "Straddle Planche Holds: 4 Sets";
+      return "Full Planche Holds & Negatives";
+    }
+
+    function getPullSkillExercise(lvl) {
+      if (lvl === 0) return "Australische Klimmzüge: 4 Sets x 12 Reps";
+      if (lvl === 1) return "Saubere Klimmzüge: 4 Sets x 8 Reps";
+      if (lvl === 2) return "High Pull-ups (Brust zu Stange): 4 Sets";
+      if (lvl === 3) return "Bar Muscle-Ups: 4 Sets x 3-5 Reps";
+      if (lvl === 4) return "Tuck Front Lever Holds: 4 Sets";
+      if (lvl === 5) return "Adv. Tuck / Straddle Front Lever: 4 Sets";
+      return "Full Front Lever Holds & Touches";
+    }
+
+    function getCoreExercise(lvl) {
+      if (lvl <= 1) return "Plank & Leg Raises Superset: 3 Sets";
+      if (lvl === 2) return "Vertical Human Flag Leaning: 4 Sets";
+      if (lvl === 3) return "Tuck Human Flag Holds: 4 Sets";
+      return "Full Human Flag Holds: 4 Sets";
+    }
+
+    function renderPlan(plan) {
+      const container = document.getElementById('workout-plan-container');
+      container.innerHTML = plan.map(w => `
+        <div class="card">
+          <div class="card-title">
+            <span>${w.title}</span>
+            <span class="day-badge">${w.day}</span>
+          </div>
+          <ul class="exercise-list">
+            ${w.exercises.map(ex => `<li>${ex}</li>`).join('')}
+          </ul>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('tracker-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const exercise = document.getElementById('exercise-select').value;
+      const primaryVal = document.getElementById('primary-value').value;
+      const sets = exercise.includes('Run') ? '-' : document.getElementById('sets').value;
+      const reps = exercise.includes('Run') ? '-' : document.getElementById('reps').value;
+
+      const newLog = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }),
+        exercise,
+        primaryVal,
+        sets,
+        reps
+      };
+
+      const logs = JSON.parse(localStorage.getItem('calisthenics_logs') || '[]');
+      logs.unshift(newLog);
+      localStorage.setItem('calisthenics_logs', JSON.stringify(logs));
+
+      document.getElementById('tracker-form').reset();
+      handleExerciseChange(); // Reset labels
+      loadLogs();
+      generateDynamicPlan();
+    });
+
+    function loadLogs() {
+      const historyContainer = document.getElementById('log-history');
+      const logs = JSON.parse(localStorage.getItem('calisthenics_logs') || '[]');
+
+      if (logs.length === 0) {
+        historyContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Noch keine Einträge vorhanden.</p>';
         return;
       }
 
-      let details = "";
-      if (exercise.type === 'strength') {
-        const w = document.getElementById('ex-weight').value || 0;
-        const r = document.getElementById('ex-reps').value || 0;
-        const s = document.getElementById('ex-sets').value || 0;
-        details = `${s} Sets à ${r} Reps mit ${w} kg`;
-      } else {
-        const d = document.getElementById('ex-duration').value || 0;
-        const p = document.getElementById('ex-pace').value || "0:00";
-        details = `${d} Min. bei ${p} Pace`;
-      }
-
-      showToast("Training gespeichert", `${exercise.name}: ${details}`);
-      
-      // Log aktualisieren
-      const logContainer = document.getElementById('workout-log');
-      if (logContainer.querySelector('.italic')) logContainer.innerHTML = '';
-      
-      const entry = document.createElement('div');
-      entry.className = "p-2 glass-input rounded-xl flex justify-between items-center";
-      entry.innerHTML = `<span class="font-semibold text-white">${exercise.name}</span><span class="text-brand-sky">${details}</span>`;
-      logContainer.prepend(entry);
+      historyContainer.innerHTML = logs.map(log => `
+        <div class="log-item">
+          <div class="log-info">
+            <div>${log.exercise}</div>
+            <div>${log.date}</div>
+          </div>
+          <div class="log-stats">
+            ${log.exercise.includes('Run') ? `${log.primaryVal} Min` : `${log.primaryVal} kg × ${log.sets}S / ${log.reps}R`}
+          </div>
+        </div>
+      `).join('');
     }
-
-    function switchTab(tab) {
-      const workoutTab = document.getElementById('tab-workout');
-      const lagerTab = document.getElementById('tab-lager');
-      const workoutBtn = document.getElementById('tab-workout-btn');
-      const lagerBtn = document.getElementById('tab-lager-btn');
-
-      if (tab === 'workout') {
-        workoutTab.classList.remove('hidden');
-        lagerTab.classList.add('hidden');
-        workoutBtn.className = "py-2 text-sm font-medium rounded-xl transition-all bg-brand-sky text-zinc-950 font-bold shadow-sm";
-        lagerBtn.className = "py-2 text-sm font-medium rounded-xl transition-all text-zinc-400 hover:text-white";
-      } else {
-        workoutTab.classList.add('hidden');
-        lagerTab.classList.remove('hidden');
-        lagerBtn.className = "py-2 text-sm font-medium rounded-xl transition-all bg-brand-sky text-zinc-950 font-bold shadow-sm";
-        workoutBtn.className = "py-2 text-sm font-medium rounded-xl transition-all text-zinc-400 hover:text-white";
-      }
-    }
-
-    // Beim Start Initialisieren
-    initExercises();
   </script>
 </body>
 </html>
