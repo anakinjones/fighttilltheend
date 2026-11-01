@@ -6,19 +6,20 @@
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Apex Calisthenics">
-  <title>Apex Calisthenics & Gym</title>
+  <meta name="apple-mobile-web-app-title" content="Apex Elite">
+  <title>Apex Calisthenics & Gym Elite</title>
 
   <style>
     :root {
-      --bg-color: #0b0f19;
-      --card-bg: #151c2c;
-      --card-border: #1e293b;
+      --bg-color: #070a12;
+      --card-bg: rgba(21, 28, 44, 0.75);
+      --card-border: rgba(56, 189, 248, 0.15);
       --accent-skyblue: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.25);
+      --accent-glow: rgba(56, 189, 248, 0.35);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --success: #22c55e;
+      --success-glow: rgba(34, 197, 94, 0.3);
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
@@ -32,110 +33,193 @@
 
     body {
       background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 50%);
       color: var(--text-main);
       font-family: var(--font-family);
       padding-top: env(safe-area-inset-top);
-      padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 90px);
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
+    /* Glassmorphism Header */
     header {
-      padding: 20px 16px 12px;
-      background: rgba(11, 15, 25, 0.85);
-      backdrop-filter: blur(10px);
+      padding: 18px 20px 14px;
+      background: rgba(7, 10, 18, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       position: sticky;
       top: 0;
       z-index: 100;
       border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     header h1 {
-      font-size: 1.4rem;
-      font-weight: 800;
+      font-size: 1.3rem;
+      font-weight: 900;
       letter-spacing: -0.5px;
       color: var(--text-main);
     }
 
     header h1 span {
       color: var(--accent-skyblue);
+      text-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .badge-status {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-skyblue);
+      border: 1px solid var(--card-border);
     }
 
     .tab-content {
       display: none;
       padding: 16px;
+      animation: fadeIn 0.25s ease-out;
     }
 
     .tab-content.active {
       display: block;
     }
 
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* High-End Cards */
     .card {
       background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 20px;
+      padding: 18px;
       margin-bottom: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     .card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--accent-skyblue);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
       margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .target-banner {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(15, 23, 42, 0.6));
-      border: 1px solid var(--accent-skyblue);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
+    .card-title span.highlight {
+      color: var(--accent-skyblue);
     }
 
-    .target-banner h2 {
-      font-size: 0.85rem;
+    /* Dashboard Header Banner */
+    .dashboard-banner {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--accent-skyblue);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 25px var(--accent-glow);
+    }
+
+    .dashboard-banner::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .dash-header {
+      font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       color: var(--accent-skyblue);
+      font-weight: 800;
       margin-bottom: 6px;
     }
 
-    .target-banner p {
-      font-size: 1rem;
-      font-weight: 700;
+    .dash-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 14px;
     }
 
+    .progress-bar-bg {
+      height: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-skyblue), #0284c7);
+      box-shadow: 0 0 10px var(--accent-skyblue);
+      transition: width 0.4s ease;
+    }
+
+    .dash-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Skill Items */
     .skill-group {
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
     .skill-group-title {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-weight: 700;
+      letter-spacing: 1px;
+      font-weight: 800;
     }
 
     .step-item {
       display: flex;
       align-items: center;
-      background: #1e293b;
-      padding: 12px 14px;
-      border-radius: 12px;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 14px 16px;
+      border-radius: 14px;
       margin-bottom: 8px;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
     }
 
+    .step-item:active {
+      transform: scale(0.98);
+    }
+
     .step-item.completed {
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid rgba(34, 197, 94, 0.3);
+      background: rgba(34, 197, 94, 0.08);
+      border-color: rgba(34, 197, 94, 0.25);
     }
 
     .step-item.completed .step-name {
@@ -144,51 +228,65 @@
     }
 
     .checkbox {
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
       border: 2px solid var(--accent-skyblue);
-      margin-right: 12px;
+      margin-right: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      transition: all 0.2s ease;
     }
 
     .step-item.completed .checkbox {
       background: var(--success);
       border-color: var(--success);
+      box-shadow: 0 0 10px var(--success-glow);
     }
 
     .step-item.completed .checkbox::after {
       content: '✓';
       color: white;
-      font-size: 14px;
-      font-weight: bold;
+      font-size: 15px;
+      font-weight: 900;
     }
 
     .step-name {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       font-weight: 600;
+      flex: 1;
     }
 
-    .day-badge {
-      background: var(--accent-skyblue);
-      color: #000;
-      font-weight: 800;
-      font-size: 0.75rem;
-      padding: 4px 8px;
+    .level-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2px 8px;
       border-radius: 6px;
+    }
+
+    /* Dynamic Workout Plan */
+    .day-badge {
+      background: linear-gradient(135deg, var(--accent-skyblue), #0284c7);
+      color: #0b0f19;
+      font-weight: 900;
+      font-size: 0.72rem;
+      padding: 5px 10px;
+      border-radius: 8px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .exercise-list {
       list-style: none;
-      margin-top: 8px;
+      margin-top: 10px;
     }
 
     .exercise-list li {
-      padding: 8px 0;
+      padding: 10px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       font-size: 0.9rem;
       color: var(--text-main);
@@ -201,63 +299,75 @@
       border-bottom: none;
     }
 
+    .ex-detail {
+      font-size: 0.8rem;
+      color: var(--accent-skyblue);
+      font-weight: 700;
+    }
+
+    /* Form Controls */
     .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     label {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     input, select {
       width: 100%;
-      padding: 12px;
-      background: #0f172a;
+      padding: 14px;
+      background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--card-border);
-      border-radius: 10px;
+      border-radius: 12px;
       color: var(--text-main);
-      font-size: 1rem;
+      font-size: 0.95rem;
       outline: none;
+      transition: all 0.2s ease;
     }
 
     input:focus, select:focus {
       border-color: var(--accent-skyblue);
-      box-shadow: 0 0 8px var(--accent-glow);
+      box-shadow: 0 0 12px var(--accent-glow);
     }
 
     .btn {
       width: 100%;
-      padding: 14px;
-      background: var(--accent-skyblue);
+      padding: 16px;
+      background: linear-gradient(135deg, var(--accent-skyblue), #0284c7);
       color: #0b0f19;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 1rem;
       border: none;
-      border-radius: 10px;
+      border-radius: 14px;
       cursor: pointer;
-      box-shadow: 0 4px 12px var(--accent-glow);
-      transition: transform 0.1s ease;
+      box-shadow: 0 4px 20px var(--accent-glow);
+      transition: transform 0.1s ease, box-shadow 0.2s ease;
     }
 
     .btn:active {
-      transform: scale(0.98);
+      transform: scale(0.97);
     }
 
     .btn-update {
-      background: linear-gradient(135deg, #38bdf8, #0284c7);
-      color: #fff;
-      margin-bottom: 16px;
+      background: linear-gradient(135deg, #38bdf8, #0369a1);
+      color: #ffffff;
+      margin-bottom: 18px;
     }
 
+    /* Log Items */
     .log-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--card-border);
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .log-info div:first-child {
@@ -266,23 +376,33 @@
     }
 
     .log-info div:last-child {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
+      margin-top: 2px;
     }
 
     .log-stats {
-      font-weight: 700;
+      font-weight: 800;
       color: var(--accent-skyblue);
+      text-align: right;
     }
 
+    .log-stats div:last-child {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Bottom Navigation Bar */
     nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: calc(65px + env(safe-area-inset-bottom));
-      background: rgba(21, 28, 44, 0.95);
-      backdrop-filter: blur(12px);
+      height: calc(68px + env(safe-area-inset-bottom));
+      background: rgba(11, 15, 25, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-top: 1px solid var(--card-border);
       display: flex;
       justify-content: space-around;
@@ -299,74 +419,95 @@
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 0.75rem;
-      font-weight: 600;
-      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      gap: 5px;
       cursor: pointer;
+      transition: color 0.2s ease;
     }
 
     .nav-btn svg {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       fill: currentColor;
+      transition: transform 0.2s ease;
     }
 
     .nav-btn.active {
       color: var(--accent-skyblue);
+    }
+
+    .nav-btn.active svg {
+      transform: translateY(-2px);
+      filter: drop-shadow(0 0 8px var(--accent-glow));
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>APEX <span>CALISTHENICS</span></h1>
+    <h1>APEX <span>ELITE</span></h1>
+    <div class="badge-status" id="hero-status">Pro Mode</div>
   </header>
 
-  <!-- TAB 1: SKILLS & PROGRESSION -->
+  <!-- TAB 1: SKILLS & DASHBOARD -->
   <div id="skills" class="tab-content active">
-    <div class="target-banner">
-      <h2>Ultimative Hauptziele</h2>
-      <p>🎯 Full Planche & 🎯 One Arm Handstand (OAH)</p>
+    <div class="dashboard-banner">
+      <div class="dash-header">Roadmap to Mastery</div>
+      <div class="dash-title">🎯 Full Planche & 🎯 One Arm Handstand</div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="total-progress-fill"></div>
+      </div>
+      <div class="dash-stats">
+        <span>Mastery Progress</span>
+        <span id="total-progress-percent">0% Completed</span>
+      </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Skill-Progressionspfad</div>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
-        Vom Anfänger bis zum Pro. Hake deine Meilensteine ab, um deinen Trainingsplan anzupassen.
+      <div class="card-title">
+        <span>Skill Progressions-Baum</span>
+        <span class="highlight" style="font-size: 0.8rem;" id="completed-count">0 Skills</span>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
+        Vom absoluten Einsteiger bis zum Elite-Athleten. Jeder Haken aktualisiert deinen KI-Trainingsplan.
       </p>
 
       <div id="progression-container"></div>
     </div>
   </div>
 
-  <!-- TAB 2: TRAININGSPLAN (7-TAGE) -->
+  <!-- TAB 2: AUTOPILOT TRAININGSPLAN -->
   <div id="plan" class="tab-content">
-    <button class="btn btn-update" onclick="generateDynamicPlan()">🔄 Plan basierend auf Skills & PRs aktualisieren</button>
+    <button class="btn btn-update" onclick="generateDynamicPlan()">⚡ Autopilot-Plan Neu Berechnen</button>
 
     <div class="card">
-      <div class="card-title">Dein Personalisierter 7-Tage Plan</div>
-      <p id="plan-status" style="font-size: 0.85rem; color: var(--text-muted);">
-        Der Plan passt sich automatisch an deine abgehakten Skills und getrackten PRs an.
+      <div class="card-title">
+        <span>7-Tage Hybrid Plan</span>
+        <span class="highlight" style="font-size: 0.8rem;" id="intensity-level">Level: Beginner</span>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-muted);">
+        Dieser Plan passt Progressionen, Sätze & Gewichte automatisch an deine Skills und PR-Einträge an.
       </p>
     </div>
 
     <div id="workout-plan-container"></div>
   </div>
 
-  <!-- TAB 3: TRACKER & LOGS -->
+  <!-- TAB 3: TRACKER & ANALYTICS -->
   <div id="tracker" class="tab-content">
     <div class="card">
-      <div class="card-title">Fortschritt / PR Eintragen</div>
+      <div class="card-title">Smart PR & Workout Tracker</div>
       <form id="tracker-form">
         <div class="form-group">
-          <label for="exercise-select">Übung auswählen</label>
+          <label for="exercise-select">Übung Auswählen</label>
           <select id="exercise-select" onchange="handleExerciseChange()" required>
-            <option value="" disabled selected>-- Bitte Übung wählen --</option>
+            <option value="" disabled selected>-- Übung Wählen --</option>
             
             <optgroup label="Lauf-Einheiten (Ausdauer)">
               <option value="5k Run">5k Run</option>
               <option value="10k Run">10k Run (Sub-30 Target)</option>
-              <option value="Intervall Run">Intervall Run / Tempo</option>
+              <option value="Intervall Run">Intervall / Tempo Run</option>
               <option value="Long Zone 2 Run">Long Zone 2 Run</option>
             </optgroup>
 
@@ -396,7 +537,7 @@
               <option value="Human Flag Progression">Human Flag Progression</option>
             </optgroup>
 
-            <optgroup label="Gym & Compound (Gewichte)">
+            <optgroup label="Gym & Heavy Weight Compound">
               <option value="Weighted Dips">Weighted Dips</option>
               <option value="Bench Press (Brustpresse)">Bench Press (Brustpresse)</option>
               <option value="Barbell Squats / Leg Press">Barbell Squats / Leg Press</option>
@@ -415,19 +556,19 @@
           </div>
           <div class="form-group" style="flex: 1;" id="sets-group">
             <label for="sets">Sets</label>
-            <input type="number" id="sets" placeholder="3" required>
+            <input type="number" id="sets" placeholder="4" required>
           </div>
           <div class="form-group" style="flex: 1;" id="reps-group">
-            <label for="reps">Reps / Dauer</label>
+            <label for="reps">Reps</label>
             <input type="number" id="reps" placeholder="8" required>
           </div>
         </div>
-        <button type="submit" class="btn">Eintrag Speichern</button>
+        <button type="submit" class="btn">Performance Eintrag Speichern</button>
       </form>
     </div>
 
     <div class="card">
-      <div class="card-title">Verlauf & PRs</div>
+      <div class="card-title">Verlauf & Rekorde</div>
       <div id="log-history"></div>
     </div>
   </div>
@@ -449,67 +590,69 @@
   </nav>
 
   <script>
+    // --- SKILL TREE DATABASE (BEGINNER TO ELITE) ---
     const progressions = [
       {
         id: "hs",
         category: "1. Handstand & One Arm Handstand (OAH)",
         steps: [
-          { name: "Pike Hold am Boden (Grundlage)", level: 1 },
-          { name: "Wall Handstand Hold (30-60s)", level: 2 },
-          { name: "Freestanding Handstand (10-20s)", level: 3 },
-          { name: "Handstand Push-ups (an der Wand)", level: 4 },
-          { name: "Freestanding HS Push-ups", level: 5 },
-          { name: "Handstand Weight Shifts", level: 6 },
-          { name: "One Arm Handstand Wall Lean", level: 7 },
-          { name: "One Arm Handstand (OAH Hold)", level: 8 }
+          { name: "Wand-Liegestütze / Bear Crawls (Anfänger)", level: 1 },
+          { name: "Pike Hold am Boden (30s)", level: 2 },
+          { name: "Wall Handstand Hold (45s)", level: 3 },
+          { name: "Freestanding Handstand (15s)", level: 4 },
+          { name: "Wall Handstand Push-ups (5 Reps)", level: 5 },
+          { name: "Freestanding HS Push-ups", level: 6 },
+          { name: "Handstand Weight Shifts & Tap Drills", level: 7 },
+          { name: "One Arm Handstand Wall Lean", level: 8 },
+          { name: "One Arm Handstand (OAH Master Hold)", level: 9 }
         ]
       },
       {
         id: "planche",
         category: "2. Planche Progression (Ziel: Full Planche)",
         steps: [
-          { name: "Liegestütze saubere Form (20 Reps)", level: 1 },
-          { name: "Planche Lean am Boden (15s)", level: 2 },
+          { name: "Knie-Liegestütze / Liegestütze (15 Reps)", level: 1 },
+          { name: "Planche Lean am Boden (20s Hold)", level: 2 },
           { name: "Tuck Planche Hold (10s)", level: 3 },
           { name: "Advanced Tuck Planche Hold", level: 4 },
           { name: "Straddle Planche Hold", level: 5 },
-          { name: "Full Planche Hold", level: 6 }
+          { name: "Full Planche Hold (Elite)", level: 6 }
         ]
       },
       {
         id: "pull",
         category: "3. Pull Skills (Front Lever & Muscle-Up)",
         steps: [
-          { name: "Australische Klimmzüge (12 Reps)", level: 1 },
-          { name: "Saubere Klimmzüge / Pull-ups (10 Reps)", level: 2 },
-          { name: "High Pull-ups (Brust zu Stange)", level: 3 },
+          { name: "Scapular Pulls / Inverted Rows", level: 1 },
+          { name: "Saubere Klimmzüge / Pull-ups (8 Reps)", level: 2 },
+          { name: "Chest-to-Bar High Pull-ups", level: 3 },
           { name: "Strict Bar Muscle-Up", level: 4 },
           { name: "Tuck Front Lever Hold", level: 5 },
-          { name: "Advanced Tuck / Straddle Front Lever", level: 6 },
+          { name: "Straddle Front Lever Hold", level: 6 },
           { name: "Full Front Lever Hold", level: 7 },
-          { name: "Front Lever Touch", level: 8 }
+          { name: "Front Lever Touch (Mastery)", level: 8 }
         ]
       },
       {
         id: "flag",
         category: "4. Core & Human Flag",
         steps: [
-          { name: "Plank Hold (60s)", level: 1 },
-          { name: "Hanging Leg Raises", level: 2 },
+          { name: "Unterarm-Plank (60s)", level: 1 },
+          { name: "Hanging Knee / Leg Raises", level: 2 },
           { name: "Vertical Human Flag Leaning", level: 3 },
-          { name: "Tuck Human Flag", level: 4 },
-          { name: "Straddle Human Flag", level: 5 },
-          { name: "Full Human Flag", level: 6 }
+          { name: "Tuck Human Flag Hold", level: 4 },
+          { name: "Straddle Human Flag Hold", level: 5 },
+          { name: "Full Human Flag Hold", level: 6 }
         ]
       },
       {
         id: "run",
-        category: "5. Ausdauer (Running Target)",
+        category: "5. Ausdauer & Running Target",
         steps: [
-          { name: "5k Run unter 30 Min", level: 1 },
-          { name: "5k Run unter 22 Min", level: 2 },
+          { name: "5k Run unter 35 Min (Basic)", level: 1 },
+          { name: "5k Run unter 25 Min", level: 2 },
           { name: "10k Run unter 45 Min", level: 3 },
-          { name: "10k Run Sub-30 Min Target", level: 4 }
+          { name: "10k Run Sub-30 Min Target (Elite)", level: 4 }
         ]
       }
     ];
@@ -531,21 +674,41 @@
       const container = document.getElementById('progression-container');
       const savedState = JSON.parse(localStorage.getItem('calisthenics_skills') || '{}');
 
+      let totalSteps = 0;
+      let completedSteps = 0;
+
       container.innerHTML = progressions.map((group, groupIdx) => `
         <div class="skill-group">
           <div class="skill-group-title">${group.category}</div>
           ${group.steps.map((step, stepIdx) => {
+            totalSteps++;
             const id = `skill-${groupIdx}-${stepIdx}`;
-            const isChecked = savedState[id] ? 'completed' : '';
+            const isChecked = savedState[id];
+            if (isChecked) completedSteps++;
+
             return `
-              <div class="step-item ${isChecked}" onclick="toggleSkill('${id}')">
+              <div class="step-item ${isChecked ? 'completed' : ''}" onclick="toggleSkill('${id}')">
                 <div class="checkbox"></div>
                 <div class="step-name">${step.name}</div>
+                <div class="level-tag">Lvl ${step.level}</div>
               </div>
             `;
           }).join('')}
         </div>
       `).join('');
+
+      // Update Dashboard Metrics
+      const percent = Math.round((completedSteps / totalSteps) * 100);
+      document.getElementById('total-progress-fill').style.width = `${percent}%`;
+      document.getElementById('total-progress-percent').innerText = `${percent}% Completed`;
+      document.getElementById('completed-count').innerText = `${completedSteps} / ${totalSteps} Skills`;
+
+      // Dynamic Status Badge
+      const heroStatus = document.getElementById('hero-status');
+      if (percent < 20) heroStatus.innerText = "Rookie Mode";
+      else if (percent < 50) heroStatus.innerText = "Intermediate";
+      else if (percent < 80) heroStatus.innerText = "Advanced";
+      else heroStatus.innerText = "Elite Athlete";
     }
 
     function toggleSkill(id) {
@@ -553,9 +716,9 @@
       savedState[id] = !savedState[id];
       localStorage.setItem('calisthenics_skills', JSON.stringify(savedState));
       renderProgressions();
+      generateDynamicPlan();
     }
 
-    // Dynamischer Wechsel zwischen Lauf-Einheiten (Minuten/Pace) und Kraft-Einheiten (Gewicht)
     function handleExerciseChange() {
       const selectedEx = document.getElementById('exercise-select').value;
       const primaryLabel = document.getElementById('primary-label');
@@ -564,8 +727,8 @@
       const repsGroup = document.getElementById('reps-group');
 
       if (selectedEx.includes('Run')) {
-        primaryLabel.innerText = "Gesamtzeit (Min)";
-        primaryInput.placeholder = "z. B. 38.5";
+        primaryLabel.innerText = "Laufzeit (Min.Sek)";
+        primaryInput.placeholder = "z.B. 29.5";
         setsGroup.style.display = "none";
         repsGroup.style.display = "none";
       } else {
@@ -576,6 +739,7 @@
       }
     }
 
+    // --- AUTOPILOT ENGINE FOR DYNAMIC WORKOUT PLAN ---
     function generateDynamicPlan() {
       const savedSkills = JSON.parse(localStorage.getItem('calisthenics_skills') || '{}');
       const logs = JSON.parse(localStorage.getItem('calisthenics_logs') || '[]');
@@ -585,89 +749,91 @@
       let pullLevel = getHighestLevel(2, savedSkills);
       let flagLevel = getHighestLevel(3, savedSkills);
 
-      let maxWeight = 0;
-      let best10k = 999;
+      let maxDipWeight = 0;
+      let maxBenchWeight = 0;
+      let best10kTime = 999;
 
       logs.forEach(l => {
-        if (l.exercise.includes('Run')) {
-          const time = parseFloat(l.primaryVal);
-          if (time < best10k) best10k = time;
-        } else {
-          const w = parseFloat(l.primaryVal);
-          if (w > maxWeight) maxWeight = w;
-        }
+        const val = parseFloat(l.primaryVal);
+        if (l.exercise.includes('Dips') && val > maxDipWeight) maxDipWeight = val;
+        if (l.exercise.includes('Bench') && val > maxBenchWeight) maxBenchWeight = val;
+        if (l.exercise.includes('10k') && val < best10kTime) best10kTime = val;
       });
+
+      // Status Intensity Level Calculation
+      const totalLevelSum = hsLevel + plancheLevel + pullLevel + flagLevel;
+      const intensityTag = document.getElementById('intensity-level');
+      if (totalLevelSum < 5) intensityTag.innerText = "Level: Foundation / Beginner";
+      else if (totalLevelSum < 15) intensityTag.innerText = "Level: Intermediate Hybrid";
+      else intensityTag.innerText = "Level: Pro Calisthenics";
 
       const plan = [
         {
           day: "Tag 1",
           title: "Push: Calisthenics & Gym Hybrid",
           exercises: [
-            getPushSkillExercise(plancheLevel),
-            getHandstandExercise(hsLevel),
-            maxWeight > 0 ? `Weighted Dips / Bench Press: 4 Sets (PR Ref: ${maxWeight}kg)` : "Dips / Liegestütze Variation: 4 Sets x 10 Reps",
-            "Incline Dumbbell / Machine Press: 3 Sets x 10 Reps",
-            "Seitheben (Kabelzug/Hantel): 3 Sets x 12 Reps"
+            { text: getPushSkillExercise(plancheLevel), detail: "Skill Focus" },
+            { text: getHandstandExercise(hsLevel), detail: "Balance / Strength" },
+            { text: maxDipWeight > 0 ? `Weighted Dips: 4 Sets x 6 Reps (PR: ${maxDipWeight}kg)` : "Liegestütze / Dips Variation: 4 Sets x 10 Reps", detail: "Strength" },
+            { text: maxBenchWeight > 0 ? `Bench Press: 3 Sets x 8 Reps (PR: ${maxBenchWeight}kg)` : "Incline Dumbbell / Machine Press: 3 Sets x 10 Reps", detail: "Hypertrophy" },
+            { text: "Seitheben (Kabelzug/Hantel): 3 Sets x 12 Reps", detail: "Isolation" }
           ]
         },
         {
           day: "Tag 2",
-          title: "Running: Intervall & Endurance",
+          title: "Running: Intervall & Speed Endurance",
           exercises: [
-            best10k <= 30 ? "🚀 Sub-30 10k Maintenance Pace Intervals" : (best10k < 999 ? `10k Run (Aktueller PR: ${best10k} Min - Ziel Sub-30)` : "10k Tempo-Lauf oder Intervalltraining (Ziel: Sub-30 Build)"),
-            "Fokus: Kadenz & Atemtechnik",
-            "Mobility & Beinstreckung: 20 Min"
+            { text: best10kTime <= 30 ? "⚡ 10k Maintenance Run (Sub-30 Level erreicht!)" : (best10kTime < 999 ? `10k Run Intervall (PR: ${best10kTime} Min -> Target: Sub-30)` : "10k Tempo-Lauf / Intervalle (Sub-30 Aufbau)"), detail: "Cardio Target" },
+            { text: "Mobility, Sprunggelenk- & Hüft-Dehnung: 20 Min", detail: "Recovery" }
           ]
         },
         {
           day: "Tag 3",
           title: "Pull: Calisthenics & Machine Heavy",
           exercises: [
-            getPullSkillExercise(pullLevel),
-            pullLevel >= 3 ? "Strict Bar Muscle-Up Practice: 4 Sets" : "High Pull-ups / Brust zur Stange: 4 Sets",
-            "Latzug / Kabelrudern (Maschine): 3 Sets x 10 Reps",
-            "Face Pulls: 3 Sets x 15 Reps",
-            getCoreExercise(flagLevel)
+            { text: getPullSkillExercise(pullLevel), detail: "Skill Focus" },
+            { text: pullLevel >= 4 ? "Strict Bar Muscle-Up Sets: 4 Sets x 3-5 Reps" : "High Pull-ups / Chest-to-Bar: 4 Sets", detail: "Power" },
+            { text: "Latzug / Kabelrudern (Maschine): 3 Sets x 10 Reps", detail: "Volume" },
+            { text: "Face Pulls (Hintere Schulter): 3 Sets x 15 Reps", detail: "Prehab" },
+            { text: getCoreExercise(flagLevel), detail: "Core" }
           ]
         },
         {
           day: "Tag 4",
-          title: "Legs & Core Heavy",
+          title: "Legs & Core Strength Heavy",
           exercises: [
-            "Barbell Squats / Leg Press: 4 Sets x 8 Reps",
-            "Romanian Deadlifts (RDL): 3 Sets x 10 Reps",
-            "Beinstrecker & Beinbeuger Maschine: 3 Sets",
-            "Calf Raises: 4 Sets x 15 Reps",
-            "Ab-Wheel Rollouts: 4 Sets"
+            { text: "Barbell Squats / Leg Press: 4 Sets x 8 Reps", detail: "Leg Compound" },
+            { text: "Romanian Deadlifts (RDL): 3 Sets x 10 Reps", detail: "Posterior Chain" },
+            { text: "Beinstrecker & Beinbeuger Maschine: 3 Sets x 12 Reps", detail: "Isolation" },
+            { text: "Wadenheben & Ab-Wheel Rollouts: 4 Sets", detail: "Core/Calves" }
           ]
         },
         {
           day: "Tag 5",
-          title: "Pure Skill Day (Fokus Technique)",
+          title: "Pure Skill Day (Technik & Hold-Time)",
           exercises: [
-            `Handstand Drills: ${getHandstandExercise(hsLevel)}`,
-            `Planche Progression: ${getPushSkillExercise(plancheLevel)}`,
-            `Flag Practice: ${getCoreExercise(flagLevel)}`,
-            "Mobility & Schulter-Gesundheit: 20 Min"
+            { text: `OAH & Handstand Drills: ${getHandstandExercise(hsLevel)}`, detail: "Skill 1" },
+            { text: `Planche Isometrics: ${getPushSkillExercise(plancheLevel)}`, detail: "Skill 2" },
+            { text: `Human Flag Holds: ${getCoreExercise(flagLevel)}`, detail: "Skill 3" },
+            { text: "Schulter-Gesundheit & Band Work: 20 Min", detail: "Prehab" }
           ]
         },
         {
           day: "Tag 6",
-          title: "Running: Long Zone 2 Run",
+          title: "Running: Long Zone 2 Aerobic Base",
           exercises: [
-            "Long Distance Base Run (8-12 km im entspannten Tempo)",
-            "Stretching & Foam Rolling"
+            { text: "Long Distance Run (8-12 km im leichten Konversationstempo)", detail: "Aerobic Base" },
+            { text: "Foam Rolling & Regeneration", detail: "Recovery" }
           ]
         },
         {
           day: "Tag 7",
-          title: "Full Body Hybrid & Dynamic Strength",
+          title: "Full Body Dynamic Power & Gym",
           exercises: [
-            getPullSkillExercise(pullLevel),
-            "Bench Press / Brustpresse: 4 Sets x 8 Reps",
-            "Seilrudern / T-Bar Row: 3 Sets x 10 Reps",
-            "Overhead Press / Pike Push-ups: 3 Sets x 8 Reps",
-            "Core Finisher"
+            { text: getPullSkillExercise(pullLevel), detail: "Dynamic Pull" },
+            { text: "Bench Press / Kurzhantel Drücken: 4 Sets x 8 Reps", detail: "Dynamic Push" },
+            { text: "Seilrudern / T-Bar Row: 3 Sets x 10 Reps", detail: "Back Density" },
+            { text: "Overhead Press / HSPU Holds: 3 Sets x 8 Reps", detail: "Shoulders" }
           ]
         }
       ];
@@ -687,36 +853,36 @@
     }
 
     function getHandstandExercise(lvl) {
-      if (lvl === 0) return "Pike Hold am Boden: 4 Sets x 30s";
-      if (lvl === 1) return "Wall Handstand Hold: 4 Sets x 45s";
-      if (lvl === 2) return "Freestanding Handstand Drills: 4 Sets";
-      if (lvl === 3) return "Handstand Push-ups an der Wand: 4 Sets";
-      if (lvl === 4) return "Freestanding HS Push-ups: 4 Sets";
-      if (lvl === 5) return "Handstand Weight Shifts: 4 Sets";
-      return "One Arm Handstand (OAH) Holds & Wall Leans";
+      if (lvl <= 1) return "Pike Hold am Boden: 4 Sets x 30s";
+      if (lvl === 2) return "Wall Handstand Hold: 4 Sets x 45s";
+      if (lvl === 3) return "Freestanding Handstand Drills: 4 Sets x 15s";
+      if (lvl === 4) return "Wall Handstand Push-ups: 4 Sets x 5 Reps";
+      if (lvl === 5) return "Freestanding HS Push-ups: 4 Sets";
+      if (lvl === 6) return "Handstand Weight Shifts: 4 Sets";
+      return "One Arm Handstand Holds & Wall Leans";
     }
 
     function getPushSkillExercise(lvl) {
-      if (lvl === 0) return "Liegestütze saubere Form: 4 Sets x 15 Reps";
-      if (lvl === 1) return "Planche Lean am Boden: 4 Sets x 20s";
-      if (lvl === 2) return "Tuck Planche Holds: 4 Sets x 10s";
-      if (lvl === 3) return "Adv. Tuck Planche Holds: 4 Sets";
-      if (lvl === 4) return "Straddle Planche Holds: 4 Sets";
-      return "Full Planche Holds & Negatives";
+      if (lvl <= 1) return "Saubere Liegestütze: 4 Sets x 15 Reps";
+      if (lvl === 2) return "Planche Lean am Boden: 4 Sets x 20s";
+      if (lvl === 3) return "Tuck Planche Holds: 4 Sets x 10s";
+      if (lvl === 4) return "Adv. Tuck Planche Holds: 4 Sets";
+      if (lvl === 5) return "Straddle Planche Holds: 4 Sets";
+      return "Full Planche Holds & Negatives (Elite)";
     }
 
     function getPullSkillExercise(lvl) {
-      if (lvl === 0) return "Australische Klimmzüge: 4 Sets x 12 Reps";
-      if (lvl === 1) return "Saubere Klimmzüge: 4 Sets x 8 Reps";
-      if (lvl === 2) return "High Pull-ups (Brust zu Stange): 4 Sets";
-      if (lvl === 3) return "Bar Muscle-Ups: 4 Sets x 3-5 Reps";
-      if (lvl === 4) return "Tuck Front Lever Holds: 4 Sets";
-      if (lvl === 5) return "Adv. Tuck / Straddle Front Lever: 4 Sets";
+      if (lvl <= 1) return "Inverted Rows: 4 Sets x 12 Reps";
+      if (lvl === 2) return "Saubere Klimmzüge: 4 Sets x 8 Reps";
+      if (lvl === 3) return "High Pull-ups (Brust zu Stange): 4 Sets";
+      if (lvl === 4) return "Strict Bar Muscle-Ups: 4 Sets x 4 Reps";
+      if (lvl === 5) return "Tuck Front Lever Holds: 4 Sets";
+      if (lvl === 6) return "Straddle Front Lever Holds: 4 Sets";
       return "Full Front Lever Holds & Touches";
     }
 
     function getCoreExercise(lvl) {
-      if (lvl <= 1) return "Plank & Leg Raises Superset: 3 Sets";
+      if (lvl <= 1) return "Unterarm-Plank & Leg Raises: 3 Sets";
       if (lvl === 2) return "Vertical Human Flag Leaning: 4 Sets";
       if (lvl === 3) return "Tuck Human Flag Holds: 4 Sets";
       return "Full Human Flag Holds: 4 Sets";
@@ -731,7 +897,12 @@
             <span class="day-badge">${w.day}</span>
           </div>
           <ul class="exercise-list">
-            ${w.exercises.map(ex => `<li>${ex}</li>`).join('')}
+            ${w.exercises.map(ex => `
+              <li>
+                <span>${ex.text}</span>
+                <span class="ex-detail">${ex.detail}</span>
+              </li>
+            `).join('')}
           </ul>
         </div>
       `).join('');
@@ -741,8 +912,11 @@
       e.preventDefault();
       const exercise = document.getElementById('exercise-select').value;
       const primaryVal = document.getElementById('primary-value').value;
-      const sets = exercise.includes('Run') ? '-' : document.getElementById('sets').value;
-      const reps = exercise.includes('Run') ? '-' : document.getElementById('reps').value;
+      const isRun = exercise.includes('Run');
+      const sets = isRun ? '-' : document.getElementById('sets').value;
+      const reps = isRun ? '-' : document.getElementById('reps').value;
+
+      let volumeCalculated = isRun ? `${primaryVal} Min` : `${(parseFloat(primaryVal) * parseInt(sets) * parseInt(reps))} kg Vol.`;
 
       const newLog = {
         id: Date.now(),
@@ -750,7 +924,8 @@
         exercise,
         primaryVal,
         sets,
-        reps
+        reps,
+        volumeCalculated
       };
 
       const logs = JSON.parse(localStorage.getItem('calisthenics_logs') || '[]');
@@ -758,7 +933,7 @@
       localStorage.setItem('calisthenics_logs', JSON.stringify(logs));
 
       document.getElementById('tracker-form').reset();
-      handleExerciseChange(); // Reset labels
+      handleExerciseChange();
       loadLogs();
       generateDynamicPlan();
     });
@@ -768,7 +943,7 @@
       const logs = JSON.parse(localStorage.getItem('calisthenics_logs') || '[]');
 
       if (logs.length === 0) {
-        historyContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Noch keine Einträge vorhanden.</p>';
+        historyContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Noch keine Performance-Einträge vorhanden.</p>';
         return;
       }
 
@@ -779,7 +954,8 @@
             <div>${log.date}</div>
           </div>
           <div class="log-stats">
-            ${log.exercise.includes('Run') ? `${log.primaryVal} Min` : `${log.primaryVal} kg × ${log.sets}S / ${log.reps}R`}
+            <div>${log.exercise.includes('Run') ? `${log.primaryVal} Min` : `${log.primaryVal} kg × ${log.sets}S / ${log.reps}R`}</div>
+            <div>${log.volumeCalculated}</div>
           </div>
         </div>
       `).join('');
