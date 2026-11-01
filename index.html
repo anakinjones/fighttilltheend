@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   
-  <!-- iOS PWA Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Apex Calisthenics">
@@ -40,10 +39,9 @@
       min-height: 100vh;
     }
 
-    /* Header */
     header {
       padding: 20px 16px 12px;
-      background: rgba(11, 15, 25, 0.8);
+      background: rgba(11, 15, 25, 0.85);
       backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
@@ -62,7 +60,6 @@
       color: var(--accent-skyblue);
     }
 
-    /* Tab Content Navigation */
     .tab-content {
       display: none;
       padding: 16px;
@@ -72,7 +69,6 @@
       display: block;
     }
 
-    /* Cards */
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -92,7 +88,6 @@
       align-items: center;
     }
 
-    /* Target Banner */
     .target-banner {
       background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(15, 23, 42, 0.6));
       border: 1px solid var(--accent-skyblue);
@@ -114,17 +109,17 @@
       font-weight: 700;
     }
 
-    /* Skill Progression Lists */
     .skill-group {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     .skill-group-title {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
       margin-bottom: 8px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      font-weight: 700;
     }
 
     .step-item {
@@ -135,6 +130,7 @@
       border-radius: 12px;
       margin-bottom: 8px;
       transition: all 0.2s ease;
+      cursor: pointer;
     }
 
     .step-item.completed {
@@ -156,7 +152,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       flex-shrink: 0;
     }
 
@@ -173,11 +168,10 @@
     }
 
     .step-name {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
     }
 
-    /* Daily Routine Schedule */
     .day-badge {
       background: var(--accent-skyblue);
       color: #000;
@@ -194,23 +188,27 @@
     }
 
     .exercise-list li {
-      padding: 6px 0;
+      padding: 8px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       font-size: 0.9rem;
       color: var(--text-main);
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
 
     .exercise-list li:last-child {
       border-bottom: none;
     }
 
-    .exercise-list li span {
-      color: var(--text-muted);
+    .exercise-tag {
+      font-size: 0.75rem;
+      color: var(--accent-skyblue);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
     }
 
-    /* Tracker Form */
     .form-group {
       margin-bottom: 12px;
     }
@@ -249,13 +247,19 @@
       border-radius: 10px;
       cursor: pointer;
       box-shadow: 0 4px 12px var(--accent-glow);
+      transition: transform 0.1s ease;
     }
 
     .btn:active {
       transform: scale(0.98);
     }
 
-    /* Log History Table */
+    .btn-update {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
     .log-item {
       display: flex;
       justify-content: space-between;
@@ -279,7 +283,6 @@
       color: var(--accent-skyblue);
     }
 
-    /* Bottom Navigation Bar */
     nav {
       position: fixed;
       bottom: 0;
@@ -335,9 +338,9 @@
     </div>
 
     <div class="card">
-      <div class="card-title">Skill Progressionspfad</div>
+      <div class="card-title">Skill-Progressionspfad</div>
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
-        Hake absolvierte Stufen ab. Beginnt beim Einsteiger-Niveau bis zu Elite-Skills.
+        Vom Anfänger bis zum Pro. Hake deine Meilensteine ab, um deinen Trainingsplan anzupassen.
       </p>
 
       <div id="progression-container"></div>
@@ -346,10 +349,12 @@
 
   <!-- TAB 2: TRAININGSPLAN (7-TAGE) -->
   <div id="plan" class="tab-content">
+    <button class="btn btn-update" onclick="generateDynamicPlan()">🔄 Plan basierend auf Skills & PRs aktualisieren</button>
+
     <div class="card">
-      <div class="card-title">7-Tage Hybrid Plan</div>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
-        Fokus: Calisthenics, Maschinen, Gewichte & Lauf-Ausdauer.
+      <div class="card-title">Dein Personalisierter 7-Tage Plan</div>
+      <p id="plan-status" style="font-size: 0.85rem; color: var(--text-muted);">
+        Der Plan passt sich automatisch an deine abgehakten Skills und getrackten PRs an.
       </p>
     </div>
 
@@ -359,16 +364,16 @@
   <!-- TAB 3: TRACKER & LOGS -->
   <div id="tracker" class="tab-content">
     <div class="card">
-      <div class="card-title">Fortschritt Eintragen</div>
+      <div class="card-title">Fortschritt / PR Eintragen</div>
       <form id="tracker-form">
         <div class="form-group">
           <label for="exercise">Übung</label>
-          <input type="text" id="exercise" placeholder="z. B. Weighted Dips, Bench Press" required>
+          <input type="text" id="exercise" placeholder="z. B. Bench Press, Weighted Dips, 10k Run" required>
         </div>
         <div style="display: flex; gap: 10px;">
           <div class="form-group" style="flex: 1;">
-            <label for="weight">Gewicht (kg)</label>
-            <input type="number" id="weight" step="0.5" placeholder="0" required>
+            <label for="weight">Gewicht / Zeit (kg/min)</label>
+            <input type="number" id="weight" step="0.1" placeholder="0" required>
           </div>
           <div class="form-group" style="flex: 1;">
             <label for="sets">Sets</label>
@@ -385,9 +390,7 @@
 
     <div class="card">
       <div class="card-title">Verlauf & PRs</div>
-      <div id="log-history">
-        <!-- Log-Einträge erscheinen hier -->
-      </div>
+      <div id="log-history"></div>
     </div>
   </div>
 
@@ -408,81 +411,78 @@
   </nav>
 
   <script>
-    // --- SKILL PROGRESSION DATA ---
+    // --- SKILL PROGRESSION DATA (ANFÄNGER BIS ELITE) ---
     const progressions = [
       {
+        id: "hs",
         category: "1. Handstand & One Arm Handstand (OAH)",
         steps: [
-          "Wall Handstand Hold (60s)",
-          "Freestanding Handstand (30s)",
-          "Handstand Push-ups (Chest-to-Wall)",
-          "Freestanding HS Push-ups",
-          "Handstand Weight Shifts",
-          "One Arm Handstand Wall Lean",
-          "One Arm Handstand (OAH Hold)"
+          { name: "Pike Hold am Boden (Grundlage)", level: 1 },
+          { name: "Wall Handstand Hold (30-60s)", level: 2 },
+          { name: "Freestanding Handstand (10-20s)", level: 3 },
+          { name: "Handstand Push-ups (an der Wand)", level: 4 },
+          { name: "Freestanding HS Push-ups", level: 5 },
+          { name: "Handstand Weight Shifts (Einarm-Vorbereitung)", level: 6 },
+          { name: "One Arm Handstand Wall Lean", level: 7 },
+          { name: "One Arm Handstand (OAH Hold)", level: 8 }
         ]
       },
       {
+        id: "planche",
         category: "2. Planche Progression (Ziel: Full Planche)",
         steps: [
-          "Planche Lean (20s Hold)",
-          "Tuck Planche Hold",
-          "Advanced Tuck Planche",
-          "Straddle Planche Hold",
-          "Full Planche Hold"
+          "Liegestütze saubere Form (20 Reps)", level: 1,
+          { name: "Planche Lean am Boden (15s)", level: 2 },
+          { name: "Tuck Planche Hold (10s)", level: 3 },
+          { name: "Advanced Tuck Planche Hold", level: 4 },
+          { name: "Straddle Planche Hold", level: 5 },
+          { name: "Full Planche Hold", level: 6 }
         ]
       },
       {
+        id: "pull",
         category: "3. Pull Skills (Front Lever & Muscle-Up)",
         steps: [
-          "Scapular Pull-ups & Core Basics",
-          "High Pull-ups (Chest to Bar)",
-          "Strict Bar Muscle-Up",
-          "Tuck Front Lever",
-          "Advanced Tuck / Straddle Front Lever",
-          "Full Front Lever Hold",
-          "Front Lever Touch"
+          { name: "Australische Klimmzüge / Inverted Rows (12 Reps)", level: 1 },
+          { name: "Saubere Klimmzüge / Pull-ups (10 Reps)", level: 2 },
+          { name: "High Pull-ups (Brust zu Stange)", level: 3 },
+          { name: "Strict Bar Muscle-Up", level: 4 },
+          { name: "Tuck Front Lever Hold", level: 5 },
+          { name: "Advanced Tuck / Straddle Front Lever", level: 6 },
+          { name: "Full Front Lever Hold", level: 7 },
+          { name: "Front Lever Touch", level: 8 }
         ]
       },
       {
-        category: "4. Push Skills (Human Flag)",
+        id: "flag",
+        category: "4. Core & Human Flag",
         steps: [
-          "Support Hold & Core Compression",
-          "Vertical Human Flag Leaning",
-          "Tuck Human Flag",
-          "Straddle Human Flag",
-          "Full Human Flag"
+          { name: "Plank Hold (60s)", level: 1 },
+          { name: "Hanging Leg Raises (Zehen zur Stange)", level: 2 },
+          { name: "Vertical Human Flag Leaning", level: 3 },
+          { name: "Tuck Human Flag", level: 4 },
+          { name: "Straddle Human Flag", level: 5 },
+          { name: "Full Human Flag", level: 6 }
         ]
       },
       {
+        id: "run",
         category: "5. Ausdauer (Running Target)",
         steps: [
-          "5k Run unter 25 Min",
-          "10k Run unter 45 Min",
-          "10k Run Sub-30 Min Target"
+          { name: "5k Run unter 30 Min", level: 1 },
+          { name: "5k Run unter 22 Min", level: 2 },
+          { name: "10k Run unter 45 Min", level: 3 },
+          { name: "10k Run Sub-30 Min Target", level: 4 }
         ]
       }
     ];
 
-    // --- WORKOUT PLAN DATA (7 DAYS) ---
-    const weeklyPlan = [
-      { day: "Tag 1", title: "Push: Calisthenics & Gym Hybrid", exercises: ["Planche Lean / Tuck Hold: 4 Sets", "Weighted Dips: 4 Sets x 6-8 Reps", "Incline Dumbbell Press: 3 Sets x 10 Reps", "Pike Push-ups / Handstand Push-ups: 4 Sets", "Lateral Raises (Kabelzug/Kurzhantel): 3 Sets x 12 Reps"] },
-      { day: "Tag 2", title: "Running: Intervall / Endurance", exercises: ["10k Tempo-Lauf oder Intervalltraining (Ziel: Sub-30 10k Build)", "Mobility & Beinstreckung: 20 Min"] },
-      { day: "Tag 3", title: "Pull: Calisthenics & Machine Heavy", exercises: ["Front Lever Progression Holds: 4 Sets", "Weighted Pull-ups: 4 Sets x 5 Reps", "Latziehen / Kabelrudern: 3 Sets x 10 Reps", "Face Pulls: 3 Sets x 15 Reps", "Core Compression & Dragon Flags: 4 Sets"] },
-      { day: "Tag 4", title: "Legs & Core Strength", exercises: ["Squats (Barbell) / Leg Press: 4 Sets x 8 Reps", "Romanian Deadlifts (RDL): 3 Sets x 10 Reps", "Beinstrecker & Beinbeuger Maschine: 3 Sets", "Calf Raises: 4 Sets x 15 Reps", "Ab-Wheel Rollouts: 4 Sets"] },
-      { day: "Tag 5", title: "Pure Skill Day (Focus & Technique)", exercises: ["Handstand & Balance Drills (OAH Practice): 30 Min", "Planche Lean & Tuck Transitions: 20 Min", "Human Flag Isometrics: 4 Sets", "Muscle-Up Technique Drills: 4 Sets"] },
-      { day: "Tag 6", title: "Running: Long Zone 2 Run", exercises: ["Long Distance Base Run (8-12 km im leichten Tempo)", "Stretching & Foam Rolling"] },
-      { day: "Tag 7", title: "Full Body Hybrid & Dynamic Strength", exercises: ["Muscle-Ups: 4 Sets", "Bench Press / Chest Press Maschine: 4 Sets x 8 Reps", "Seilrudern / T-Bar Row: 3 Sets x 10 Reps", "Overhead Press / HSPU: 3 Sets x 8 Reps", "Human Flag & Core Finisher: 3 Sets"] }
-    ];
-
-    // --- APP INITIALIZATION ---
     document.addEventListener("DOMContentLoaded", () => {
       renderProgressions();
-      renderWorkoutPlan();
+      generateDynamicPlan();
       loadLogs();
     });
 
-    // Navigation Switch
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -490,7 +490,6 @@
       btn.classList.add('active');
     }
 
-    // Render Skill Progressions
     function renderProgressions() {
       const container = document.getElementById('progression-container');
       const savedState = JSON.parse(localStorage.getItem('calisthenics_skills') || '{}');
@@ -499,12 +498,13 @@
         <div class="skill-group">
           <div class="skill-group-title">${group.category}</div>
           ${group.steps.map((step, stepIdx) => {
+            const stepName = typeof step === 'string' ? step : step.name;
             const id = `skill-${groupIdx}-${stepIdx}`;
             const isChecked = savedState[id] ? 'completed' : '';
             return `
               <div class="step-item ${isChecked}" onclick="toggleSkill('${id}')">
                 <div class="checkbox"></div>
-                <div class="step-name">${step}</div>
+                <div class="step-name">${stepName}</div>
               </div>
             `;
           }).join('')}
@@ -519,10 +519,151 @@
       renderProgressions();
     }
 
-    // Render Workout Plan
-    function renderWorkoutPlan() {
+    // --- DYNAMISCHER PLAN GENERATOR ---
+    function generateDynamicPlan() {
+      const savedSkills = JSON.parse(localStorage.getItem('calisthenics_skills') || '{}');
+      const logs = JSON.parse(localStorage.getItem('calisthenics_logs') || '[]');
+
+      // Höchste abgehakte Levels ermitteln
+      let hsLevel = getHighestLevel(0, savedSkills);
+      let plancheLevel = getHighestLevel(1, savedSkills);
+      let pullLevel = getHighestLevel(2, savedSkills);
+      let flagLevel = getHighestLevel(3, savedSkills);
+
+      // Höchstes getracktes Gewicht für Dips & Bench als Zusatz-Reiz
+      let maxWeight = 0;
+      logs.forEach(l => {
+        const w = parseFloat(l.weight);
+        if (w > maxWeight) maxWeight = w;
+      });
+
+      const plan = [
+        {
+          day: "Tag 1",
+          title: "Push: Calisthenics & Gym Hybrid",
+          exercises: [
+            getPushSkillExercise(plancheLevel),
+            getHandstandExercise(hsLevel),
+            maxWeight > 0 ? `Weighted Dips / Bench Press: 4 Sets (PR Ref: ${maxWeight}kg)` : "Dips / Liegestütze Variation: 4 Sets x 10 Reps",
+            "Incline Dumbbell / Machine Press: 3 Sets x 10 Reps",
+            "Seitheben (Kabelzug/Hantel): 3 Sets x 12 Reps"
+          ]
+        },
+        {
+          day: "Tag 2",
+          title: "Running: Intervall & Endurance",
+          exercises: [
+            "10k Tempo-Lauf oder Intervalltraining",
+            "Fokus: Kadenz & Atemtechnik (Ziel: Sub-30 Build)",
+            "Mobility & Beinstreckung: 20 Min"
+          ]
+        },
+        {
+          day: "Tag 3",
+          title: "Pull: Calisthenics & Machine Heavy",
+          exercises: [
+            getPullSkillExercise(pullLevel),
+            pullLevel >= 3 ? "Strict Bar Muscle-Up Practice: 4 Sets" : "High Pull-ups / Brust zur Stange: 4 Sets",
+            "Latzug / Kabelrudern (Maschine): 3 Sets x 10 Reps",
+            "Face Pulls: 3 Sets x 15 Reps",
+            getCoreExercise(flagLevel)
+          ]
+        },
+        {
+          day: "Tag 4",
+          title: "Legs & Core Heavy",
+          exercises: [
+            "Barbell Squats / Leg Press: 4 Sets x 8 Reps",
+            "Romanian Deadlifts (RDL): 3 Sets x 10 Reps",
+            "Beinstrecker & Beinbeuger Maschine: 3 Sets",
+            "Calf Raises: 4 Sets x 15 Reps",
+            "Ab-Wheel Rollouts: 4 Sets"
+          ]
+        },
+        {
+          day: "Tag 5",
+          title: "Pure Skill Day (Fokus Technique)",
+          exercises: [
+            `Handstand Drills: ${getHandstandExercise(hsLevel)}`,
+            `Planche Progression: ${getPushSkillExercise(plancheLevel)}`,
+            `Flag Practice: ${getCoreExercise(flagLevel)}`,
+            "Mobility & Schulter-Gesundheit: 20 Min"
+          ]
+        },
+        {
+          day: "Tag 6",
+          title: "Running: Long Zone 2 Run",
+          exercises: [
+            "Long Distance Base Run (8-12 km im entspannten Tempo)",
+            "Stretching & Foam Rolling"
+          ]
+        },
+        {
+          day: "Tag 7",
+          title: "Full Body Hybrid & Dynamic Strength",
+          exercises: [
+            getPullSkillExercise(pullLevel),
+            "Bench Press / Brustpresse: 4 Sets x 8 Reps",
+            "Seilrudern / T-Bar Row: 3 Sets x 10 Reps",
+            "Overhead Press / Pike Push-ups: 3 Sets x 8 Reps",
+            "Core Finisher"
+          ]
+        }
+      ];
+
+      renderPlan(plan);
+    }
+
+    function getHighestLevel(groupIdx, savedSkills) {
+      const group = progressions[groupIdx];
+      let max = 0;
+      group.steps.forEach((s, idx) => {
+        if (savedSkills[`skill-${groupIdx}-${idx}`]) {
+          max = idx + 1;
+        }
+      });
+      return max;
+    }
+
+    function getHandstandExercise(lvl) {
+      if (lvl === 0) return "Pike Hold am Boden: 4 Sets x 30s";
+      if (lvl === 1) return "Wall Handstand Hold: 4 Sets x 45s";
+      if (lvl === 2) return "Freestanding Handstand Drills: 4 Sets";
+      if (lvl === 3) return "Handstand Push-ups an der Wand: 4 Sets";
+      if (lvl === 4) return "Freestanding HS Push-ups: 4 Sets";
+      if (lvl === 5) return "Handstand Weight Shifts: 4 Sets";
+      return "One Arm Handstand (OAH) Holds & Wall Leans";
+    }
+
+    function getPushSkillExercise(lvl) {
+      if (lvl === 0) return "Liegestütze saubere Form: 4 Sets x 15 Reps";
+      if (lvl === 1) return "Planche Lean am Boden: 4 Sets x 20s";
+      if (lvl === 2) return "Tuck Planche Holds: 4 Sets x 10s";
+      if (lvl === 3) return "Adv. Tuck Planche Holds: 4 Sets";
+      if (lvl === 4) return "Straddle Planche Holds: 4 Sets";
+      return "Full Planche Holds & Negatives";
+    }
+
+    function getPullSkillExercise(lvl) {
+      if (lvl === 0) return "Australische Klimmzüge: 4 Sets x 12 Reps";
+      if (lvl === 1) return "Saubere Klimmzüge: 4 Sets x 8 Reps";
+      if (lvl === 2) return "High Pull-ups (Brust zu Stange): 4 Sets";
+      if (lvl === 3) return "Bar Muscle-Ups: 4 Sets x 3-5 Reps";
+      if (lvl === 4) return "Tuck Front Lever Holds: 4 Sets";
+      if (lvl === 5) return "Adv. Tuck / Straddle Front Lever: 4 Sets";
+      return "Full Front Lever Holds & Touches";
+    }
+
+    function getCoreExercise(lvl) {
+      if (lvl <= 1) return "Plank & Leg Raises Superset: 3 Sets";
+      if (lvl === 2) return "Vertical Human Flag Leaning: 4 Sets";
+      if (lvl === 3) return "Tuck Human Flag Holds: 4 Sets";
+      return "Full Human Flag Holds: 4 Sets";
+    }
+
+    function renderPlan(plan) {
       const container = document.getElementById('workout-plan-container');
-      container.innerHTML = weeklyPlan.map(w => `
+      container.innerHTML = plan.map(w => `
         <div class="card">
           <div class="card-title">
             <span>${w.title}</span>
@@ -535,7 +676,6 @@
       `).join('');
     }
 
-    // Tracker Form Submission & LocalStorage
     document.getElementById('tracker-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const exercise = document.getElementById('exercise').value;
@@ -558,6 +698,7 @@
 
       document.getElementById('tracker-form').reset();
       loadLogs();
+      generateDynamicPlan();
     });
 
     function loadLogs() {
@@ -576,7 +717,7 @@
             <div>${log.date}</div>
           </div>
           <div class="log-stats">
-            ${log.weight} kg × ${log.sets}S / ${log.reps}R
+            ${log.weight} kg/min × ${log.sets}S / ${log.reps}R
           </div>
         </div>
       `).join('');
